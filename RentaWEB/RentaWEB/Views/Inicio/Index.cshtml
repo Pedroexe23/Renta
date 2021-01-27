@@ -1,0 +1,45 @@
+﻿
+@{
+
+}
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="~/Content/Style.css" rel="stylesheet" />
+    <title>Inicio</title>
+</head>
+    
+    <body>
+        
+        <main>
+            <div class="row">
+                <form action="~/Views/Inicio/Index" method="post">
+                    <div class="col-lg col-md col-sm">
+                        <div class="card-header text-center">
+                            <span> Login</span>
+                        </div>
+                        <div class="card-body  text-center">
+                            <div>
+                                <span> Usuario: </span>
+                                <input type="text" name="nombre-txt" class="separacionU" />
+
+                            </div><br />
+
+                            <div>
+                                <span class="separacionC"> Contraseña: </span>
+                                <input type="password" name="contrasena-txt" class="separacionB" />
+
+                            </div>
+
+
+                        </div>
+                        <div class="card-footer text-center">
+                            <input type="submit" name="Ingresar" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </body>
+</html>

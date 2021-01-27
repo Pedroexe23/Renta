@@ -1,0 +1,162 @@
+﻿@model RentaWEB.Models.Causante
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Causante</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Rut_Causante)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rut_Causante)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre_Causante)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre_Causante)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cod_Tipo_Causante)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cod_Tipo_Causante)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tipo_Causante)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tipo_Causante)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rut_beneficiario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rut_beneficiario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre_beneficiario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre_beneficiario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Codigo_Tipo_beneficiario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Codigo_Tipo_beneficiario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tipo_beneficiario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tipo_beneficiario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Codigo_Tipo_Beneficio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Codigo_Tipo_Beneficio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tipo_Beneficio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tipo_Beneficio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rut_Empleador)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rut_Empleador)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre_Empleador)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre_Empleador)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_Reconocimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_Reconocimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tramo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tramo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Monto_Beneficiario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Monto_Beneficiario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Codigo_Estado_Tupla)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Codigo_Estado_Tupla)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Glosa_Estado_Tupla)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Glosa_Estado_Tupla)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Renta_Promedio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Renta_Promedio)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Num_Correlativo }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
