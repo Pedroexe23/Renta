@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -122,6 +123,55 @@ namespace RentaWEB.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        public ActionResult Inicio()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Inicio(FormCollection formCollection)
+        {
+            Usuario usuario = new Usuario();
+            String User = formCollection["nombre-txt"];
+            String Contrasena = formCollection["contrasena-txt"];
+            if (User.Equals(usuario.Username) && Contrasena.Equals(usuario.Password))
+            {
+                return RedirectToAction("Insertar");
+            }
+            return View();
+
+        }
+        [HttpGet]
+        public ActionResult Insertar()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Insertar(HttpPostedFileBase Files)
+        {
+
+            if (Files == null || Files.ContentLength == 0)
+            {
+                return Content("file not selected");
+            }
+            else
+            {
+                String fileName = Path.GetFileName(Files.FileName);
+
+                String folderpath = Path.Combine(Server.MapPath("~/Views/Causantes/descargas"), fileName);
+
+                Files.SaveAs(folderpath);
+                ViewBag.Message = "Archivo Subido";
+                return View();
+            }
+
+
+
+            return View();
+
         }
     }
 }

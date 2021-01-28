@@ -104,7 +104,6 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CausantesController.cs" />
-    <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -124,7 +123,8 @@
     <Content Include="Views\Causantes\Details.cshtml" />
     <Content Include="Views\Causantes\Edit.cshtml" />
     <Content Include="Views\Causantes\Index.cshtml" />
-    <Content Include="Views\Inicio\Index.cshtml" />
+    <Content Include="Views\Causantes\Inicio.cshtml" />
+    <Content Include="Views\Causantes\Insertar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Causantes\descargas\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
