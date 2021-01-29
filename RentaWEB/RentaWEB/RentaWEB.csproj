@@ -125,6 +125,7 @@
     <Content Include="Views\Causantes\Index.cshtml" />
     <Content Include="Views\Causantes\Inicio.cshtml" />
     <Content Include="Views\Causantes\Insertar.cshtml" />
+    <Content Include="Views\Causantes\Descargar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

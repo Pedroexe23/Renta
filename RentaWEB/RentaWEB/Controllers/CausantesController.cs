@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -162,16 +163,68 @@ namespace RentaWEB.Controllers
                 String fileName = Path.GetFileName(Files.FileName);
 
                 String folderpath = Path.Combine(Server.MapPath("~/Views/Causantes/descargas"), fileName);
+               
 
                 Files.SaveAs(folderpath);
                 ViewBag.Message = "Archivo Subido";
-                return View();
+
+                //Crea un DataTable.
+                DataTable dt = new DataTable();
+                dt.Columns.AddRange(new DataColumn[19]{
+                new DataColumn("Num_Correlativo",typeof(int)),
+                new DataColumn("Rut_Causante",typeof(string)),
+                new DataColumn("Nombre_Causante",typeof(string)),
+                new DataColumn("Cod_Tipo_Causante",typeof(int)),
+                new DataColumn("Tipo_Causante",typeof(string)),
+                new DataColumn("Rut_beneficiario",typeof(string)),
+                new DataColumn("Nombre_beneficiario",typeof(string)),
+                new DataColumn("Codigo_Tipo_beneficiario",typeof(int)),
+                new DataColumn("Tipo_beneficiario",typeof(string)),
+                new DataColumn("Codigo_Tipo_Beneficio",typeof(int)),
+                new DataColumn("Tipo_Beneficio",typeof(string)),
+                new DataColumn("Rut_Empleador",typeof(string)),
+                new DataColumn("Nombre_Empleador",typeof(string)),
+                new DataColumn("Fecha_Reconocimiento",typeof(DateTime)),
+                new DataColumn("Tramo",typeof(int)),
+                new DataColumn("Monto_Beneficiario",typeof(int)),
+                new DataColumn("Codigo_Estado_Tupla",typeof(int)),
+                new DataColumn("Glosa_Estado_Tupla",typeof(string)),
+                 new DataColumn("Renta_Promedio",typeof(int)) });
+
+                //Lee el contenido del archivo CSV.
+                string csvData = System.IO.File.ReadAllText(folderpath);
+                //Ejecuta un bucle sobre las filas.
+                foreach (string row in csvData.Split('\n'))
+                {
+                    if (!string.IsNullOrEmpty(row))
+                    {
+                        dt.Rows.Add();
+                        int i = 0;
+
+                        //Ejecuta un bucle sobre las columnas.
+                        foreach (string cell in row.Split('|'))
+                        {
+                            dt.Rows[dt.Rows.Count - 1][i] = cell;
+                            i++;
+                        }
+
+                    }
+                }
+               
+
+
+                    return View();
             }
 
+        }
+        public FileResult Descargar()
+        {
+            String fileName = Path.GetFileName("archivo.csv");
 
+            String folderpath = Path.Combine(Server.MapPath("~/Views/Causantes/descargas"), fileName);
+            ViewBag.Message = "Archivo Subido";
 
-            return View();
-
+            return File(folderpath, "text/csv", "archivo.csv");
         }
     }
 }

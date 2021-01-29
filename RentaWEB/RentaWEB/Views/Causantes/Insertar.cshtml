@@ -12,22 +12,22 @@
     @using (Html.BeginForm("Insertar", "Causantes", FormMethod.Post, new {enctype= "multipart/form-data" } ))
     {
         
-                <div class="card">
-                    <div class="card-body">
-                        @Html.TextBox("Files", "", new { type = "file" }) <br />
+    <div class="card">
+        <div class="card-body">
+            @Html.TextBox("Files", "", new { type = "file" }) <br />
 
-                        <input type="submit" value="Upload" />
-                        
-                        @{ 
-                            if (ViewBag.Message!= null)
-                            {
-                                @ViewBag.Message
-                            }
+            <input type="submit" value="Upload" />
 
-                        }
-                    </div>
+            @{
+                if (ViewBag.Message != null)
+                {
+                    @ViewBag.Message
+                }
 
-                </div>
+            }
+        </div>
+        <a href="/Causantes/Descargar" class="btn btn-succes">Descargar</a>
+    </div>
          
     }
 </body>
