@@ -10,54 +10,88 @@ namespace RentaWEB.Models
     public partial class Causante
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Num_Correlativo { get; set; }
+        [Column(Order = 0)]
+        public byte NUM_CORRELATIVO { get; set; }
 
-        [StringLength(10)]
-        public string Rut_Causante { get; set; }
-
+        [Key]
+        [Column(Order = 1)]
         [StringLength(50)]
-        public string Nombre_Causante { get; set; }
+        public string RUT_CAUSANTE { get; set; }
 
-        public int? Cod_Tipo_Causante { get; set; }
+        [Key]
+        [Column(Order = 2)]
+        [StringLength(50)]
+        public string NOMBRE_CAUSANTE { get; set; }
 
+        [Key]
+        [Column(Order = 3)]
+        public byte CODIGO_TIPO_CAUSANTE { get; set; }
+
+        [Key]
+        [Column(Order = 4)]
         [StringLength(100)]
-        public string Tipo_Causante { get; set; }
+        public string TIPO_CAUSANTE { get; set; }
 
-        [StringLength(10)]
-        public string Rut_beneficiario { get; set; }
-
+        [Key]
+        [Column(Order = 5)]
         [StringLength(50)]
-        public string Nombre_beneficiario { get; set; }
+        public string RUT_BENEFICIARIO { get; set; }
 
-        public int? Codigo_Tipo_beneficiario { get; set; }
-
-        [StringLength(25)]
-        public string Tipo_beneficiario { get; set; }
-
-        public int? Codigo_Tipo_Beneficio { get; set; }
-
-        [StringLength(25)]
-        public string Tipo_Beneficio { get; set; }
-
-        [StringLength(10)]
-        public string Rut_Empleador { get; set; }
-
+        [Key]
+        [Column(Order = 6)]
         [StringLength(50)]
-        public string Nombre_Empleador { get; set; }
+        public string NOMBRE_BENEFICIARIO { get; set; }
 
-        [Column(TypeName = "date")]
-        public DateTime? Fecha_Reconocimiento { get; set; }
+        [Key]
+        [Column(Order = 7)]
+        public byte CODIGO_TIPO_BENEFICIARIO { get; set; }
 
-        public int? Tramo { get; set; }
+        [Key]
+        [Column(Order = 8)]
+        [StringLength(50)]
+        public string TIPO_BENEFICIARIO { get; set; }
 
-        public int? Monto_Beneficiario { get; set; }
+        [Key]
+        [Column(Order = 9)]
+        public byte CODIGO_TIPO_BENEFICIO { get; set; }
 
-        public int? Codigo_Estado_Tupla { get; set; }
+        [Key]
+        [Column(Order = 10)]
+        [StringLength(50)]
+        public string TIPO_BENEFICIO { get; set; }
 
-        [StringLength(30)]
-        public string Glosa_Estado_Tupla { get; set; }
+        [Key]
+        [Column(Order = 11)]
+        [StringLength(50)]
+        public string RUT_EMPLEADOR { get; set; }
 
-        public int? Renta_Promedio { get; set; }
+        [Key]
+        [Column(Order = 12)]
+        [StringLength(50)]
+        public string NOMBRE_EMPLEADOR { get; set; }
+
+        [Key]
+        [Column(Order = 13, TypeName = "date")]
+        public DateTime FECHA_RECONOCIMIENTO { get; set; }
+
+        [Key]
+        [Column(Order = 14)]
+        public byte TRAMO { get; set; }
+
+        [Key]
+        [Column(Order = 15)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public short MONTO_BENEFICIO { get; set; }
+
+        [Key]
+        [Column(Order = 16)]
+        public byte CODIGO_ESTADO_TUPLA { get; set; }
+
+        [Key]
+        [Column(Order = 17)]
+        [StringLength(50)]
+        public string GLOSA_ESTADO_TUPLA { get; set; }
+
+        public int? PROMEDIO_RENTA { get; set; }
     }
 }
