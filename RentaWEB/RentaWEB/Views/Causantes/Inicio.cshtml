@@ -14,36 +14,36 @@
 <body>
 
     <main>
-        @using (Html.BeginForm()) 
+        @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-        <div class="row">
-            <form method="post">
-                <div class="col-lg col-md col-sm">
-                    <div class="card-header text-center">
-                        <span> Login</span>
-                    </div>
-                    <div class="card-body  text-center">
-                        <div>
-                            <span> Usuario: </span>
-                            <input type="text" name="nombre-txt" id="nombre-txt" class="separacionU" />
+            <div class="row">
+                <form method="post">
+                    <div class="col-lg col-md col-sm">
+                        <div class="card-header text-center">
+                            <span> Login</span>
+                        </div>
+                        <div class="card-body  text-center">
+                            <div>
+                                <span> Usuario: </span>
+                                <input type="text" name="nombre-txt" id="nombre-txt" class="separacionU" />
 
-                        </div><br />
+                            </div><br />
 
-                        <div>
-                            <span class="separacionC"> Contraseña: </span>
-                            <input type="password" name="contrasena-txt" id="nombre-txt" class="separacionB" />
+                            <div>
+                                <span class="separacionC"> Contraseña: </span>
+                                <input type="password" name="contrasena-txt" id="nombre-txt" class="separacionB" />
+
+                            </div>
+
 
                         </div>
-
-
+                        <div class="card-footer text-center">
+                            <input type="submit" name="Ingresar" class="btn btn-primary" />
+                        </div>
                     </div>
-                    <div class="card-footer text-center">
-                        <input type="submit" name="Ingresar" class="btn btn-primary" />
-                    </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
         }
     </main>
 </body>

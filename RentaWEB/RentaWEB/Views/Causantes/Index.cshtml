@@ -12,58 +12,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Rut_Causante)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre_Causante)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Cod_Tipo_Causante)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Tipo_Causante)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Rut_beneficiario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre_beneficiario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Codigo_Tipo_beneficiario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Tipo_beneficiario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Codigo_Tipo_Beneficio)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Tipo_Beneficio)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Rut_Empleador)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre_Empleador)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Fecha_Reconocimiento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Tramo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Monto_Beneficiario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Codigo_Estado_Tupla)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Glosa_Estado_Tupla)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Renta_Promedio)
+            @Html.DisplayNameFor(model => model.PROMEDIO_RENTA)
         </th>
         <th></th>
     </tr>
@@ -71,63 +20,12 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Rut_Causante)
+            @Html.DisplayFor(modelItem => item.PROMEDIO_RENTA)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Nombre_Causante)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Cod_Tipo_Causante)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Tipo_Causante)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Rut_beneficiario)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre_beneficiario)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Codigo_Tipo_beneficiario)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Tipo_beneficiario)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Codigo_Tipo_Beneficio)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Tipo_Beneficio)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Rut_Empleador)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre_Empleador)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Fecha_Reconocimiento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Tramo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Monto_Beneficiario)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Codigo_Estado_Tupla)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Glosa_Estado_Tupla)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Renta_Promedio)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Num_Correlativo }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Num_Correlativo }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Num_Correlativo })
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
         </td>
     </tr>
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -24,7 +23,7 @@ namespace RentaWEB.Controllers
         }
 
         // GET: Causantes/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(byte? id)
         {
             if (id == null)
             {
@@ -49,7 +48,7 @@ namespace RentaWEB.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Num_Correlativo,Rut_Causante,Nombre_Causante,Cod_Tipo_Causante,Tipo_Causante,Rut_beneficiario,Nombre_beneficiario,Codigo_Tipo_beneficiario,Tipo_beneficiario,Codigo_Tipo_Beneficio,Tipo_Beneficio,Rut_Empleador,Nombre_Empleador,Fecha_Reconocimiento,Tramo,Monto_Beneficiario,Codigo_Estado_Tupla,Glosa_Estado_Tupla,Renta_Promedio")] Causante causante)
+        public ActionResult Create([Bind(Include = "NUM_CORRELATIVO,RUT_CAUSANTE,NOMBRE_CAUSANTE,CODIGO_TIPO_CAUSANTE,TIPO_CAUSANTE,RUT_BENEFICIARIO,NOMBRE_BENEFICIARIO,CODIGO_TIPO_BENEFICIARIO,TIPO_BENEFICIARIO,CODIGO_TIPO_BENEFICIO,TIPO_BENEFICIO,RUT_EMPLEADOR,NOMBRE_EMPLEADOR,FECHA_RECONOCIMIENTO,TRAMO,MONTO_BENEFICIO,CODIGO_ESTADO_TUPLA,GLOSA_ESTADO_TUPLA,PROMEDIO_RENTA")] Causante causante)
         {
             if (ModelState.IsValid)
             {
@@ -62,7 +61,7 @@ namespace RentaWEB.Controllers
         }
 
         // GET: Causantes/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(byte? id)
         {
             if (id == null)
             {
@@ -81,7 +80,7 @@ namespace RentaWEB.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Num_Correlativo,Rut_Causante,Nombre_Causante,Cod_Tipo_Causante,Tipo_Causante,Rut_beneficiario,Nombre_beneficiario,Codigo_Tipo_beneficiario,Tipo_beneficiario,Codigo_Tipo_Beneficio,Tipo_Beneficio,Rut_Empleador,Nombre_Empleador,Fecha_Reconocimiento,Tramo,Monto_Beneficiario,Codigo_Estado_Tupla,Glosa_Estado_Tupla,Renta_Promedio")] Causante causante)
+        public ActionResult Edit([Bind(Include = "NUM_CORRELATIVO,RUT_CAUSANTE,NOMBRE_CAUSANTE,CODIGO_TIPO_CAUSANTE,TIPO_CAUSANTE,RUT_BENEFICIARIO,NOMBRE_BENEFICIARIO,CODIGO_TIPO_BENEFICIARIO,TIPO_BENEFICIARIO,CODIGO_TIPO_BENEFICIO,TIPO_BENEFICIO,RUT_EMPLEADOR,NOMBRE_EMPLEADOR,FECHA_RECONOCIMIENTO,TRAMO,MONTO_BENEFICIO,CODIGO_ESTADO_TUPLA,GLOSA_ESTADO_TUPLA,PROMEDIO_RENTA")] Causante causante)
         {
             if (ModelState.IsValid)
             {
@@ -93,7 +92,7 @@ namespace RentaWEB.Controllers
         }
 
         // GET: Causantes/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(byte? id)
         {
             if (id == null)
             {
@@ -110,7 +109,7 @@ namespace RentaWEB.Controllers
         // POST: Causantes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(byte id)
         {
             Causante causante = db.Causante.Find(id);
             db.Causante.Remove(causante);
@@ -126,6 +125,7 @@ namespace RentaWEB.Controllers
             }
             base.Dispose(disposing);
         }
+
         public ActionResult Inicio()
         {
             return View();
@@ -167,43 +167,81 @@ namespace RentaWEB.Controllers
 
 
                 Files.SaveAs(folderpath);
-                ViewBag.Message = "Archivo Subido";
 
-                
-                CsvFileDescription csvFileDescription = new CsvFileDescription
+
+
+                try
+                {
+                    CsvFileDescription csvFileDescription = new CsvFileDescription
                     {
-                    SeparatorChar = '|' ,
-                    FirstLineHasColumnNames = true,
-                    IgnoreUnknownColumns =true
+                        SeparatorChar = '|',
+                        FirstLineHasColumnNames = true,
 
-                };
+
+                    };
                     CsvContext csvContext = new CsvContext();
                     StreamReader streamReader = new StreamReader(Files.InputStream);
-                /*List<Causante> list = (List < Causante >)csvContext.Read<Causante>(streamReader, csvFileDescription);
-                    list=list[0].*/
-                IEnumerable<Causante> list = csvContext.Read<Causante>(streamReader, csvFileDescription);
-                db.Causante.AddRange(list);
+                    IEnumerable<Causante> list = csvContext.Read<Causante>(streamReader, csvFileDescription);
+                    db.Causante.AddRange(list);
                     db.SaveChanges();
+                    ViewBag.Message = "Archivo Subido";
+                    return Redirect("Descargar");
 
+                }
+                catch (Exception)
+                {
+                    ViewBag.Message = "Archivo erroneo";
 
-
-
-                    return View();
                 }
 
-
-
-            
-
+                return View();
             }
-            public FileResult Descargar()
+
+
+
+
+
+        }
+        public ActionResult Descargar()
+        {
+            return View(db.Causante.ToList());
+        }
+
+
+        [HttpPost]
+        public ActionResult Descargar(String id)
+        {
+            try
             {
-                String fileName = Path.GetFileName("archivo.csv");
+                List<Causante> list = db.Causante.ToList();
 
-                String folderpath = Path.Combine(Server.MapPath("~/Views/Causantes/descargas"), fileName);
-                ViewBag.Message = "Archivo Subido";
+                CsvFileDescription csvFileDescription = new CsvFileDescription
+                {
+                    SeparatorChar = ',',
+                    FirstLineHasColumnNames = true,
+                    EnforceCsvColumnAttribute = true
+                };
+                CsvContext csvContext = new CsvContext();
+                byte[] file = null;
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    using (StreamWriter streamWriter = new StreamWriter(memoryStream))
+                    {
+                        csvContext.Write<Causante>(list, streamWriter, csvFileDescription);
+                        streamWriter.Flush();
+                        file = memoryStream.ToArray();
+                    }
+                }
+                return File(file, "text/csv", "Causante.csv");
 
-                return File(folderpath, "text/csv", "archivo.csv");
             }
+            catch (Exception)
+            {
+
+
+            }
+
+            return View();
         }
     }
+}
