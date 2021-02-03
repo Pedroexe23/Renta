@@ -8,13 +8,15 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LINQtoCSV;
-using RentaWEB.Models;
+using RentaWEB2._0.Models;
+using ClosedXML.Excel;
+using System.Text;
 
-namespace RentaWEB.Controllers
+namespace RentaWEB2._0.Controllers
 {
     public class CausantesController : Controller
     {
-        private MunicipalModel db = new MunicipalModel();
+        private Municipalidad db = new Municipalidad();
 
         // GET: Causantes
         public ActionResult Index()
@@ -125,7 +127,6 @@ namespace RentaWEB.Controllers
             }
             base.Dispose(disposing);
         }
-
         public ActionResult Inicio()
         {
             return View();
@@ -202,7 +203,7 @@ namespace RentaWEB.Controllers
 
 
         }
-      
+
         public ActionResult Descargar()
         {
             return View(db.Causante.ToList());
@@ -210,9 +211,10 @@ namespace RentaWEB.Controllers
 
 
         [HttpPost]
-        public ActionResult Descargar(String id)
-        {
-                List<Causante> list = db.Causante.ToList();
+        public void Descargar(String id)
+        {/*
+       
+            List<Causante>list = db.Causante.ToList();
 
                 CsvFileDescription csvFileDescription = new CsvFileDescription
                 {
@@ -220,23 +222,55 @@ namespace RentaWEB.Controllers
                     FirstLineHasColumnNames = true,
                     EnforceCsvColumnAttribute = true
                 };
-                CsvContext csvContext = new CsvContext();
-                byte[] file = null;
-                using (MemoryStream memoryStream = new MemoryStream())
+            CsvContext csvContext = new CsvContext();
+            byte[] file = null;
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (StreamWriter streamWriter = new StreamWriter(memoryStream))
                 {
-                    using (StreamWriter streamWriter = new StreamWriter(memoryStream))
-                    {
-                        csvContext.Write<Causante>(list, streamWriter, csvFileDescription);
- 
-                        streamWriter.Flush();
-                        file = memoryStream.ToArray();
-                    }
+                    csvContext.Write<Causante>(list, streamWriter, csvFileDescription);
+                    streamWriter.Flush();
+                     
+                    
                 }
-                return File(file, "text/csv", "Causante.csv");
+                
+            }
+            return File(file, "text/csv", "Causante.csv");
 
-            
-     
-          
+
+
+
+           */
+
+            StringWriter sb =  new StringWriter();
+            string qry = ("Select * from dbo.Causante");
+            IEnumerable<Causante> query = db.Database.SqlQuery<Causante>(qry);
+            var list = db.Causante.OrderBy(x => x.NUM_CORRELATIVO).ToList();
+            sb.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}",
+                "NUM_CORRELATIVO", "RUT_CAUSANTE", "NOMBRE_CAUSANTE", "CODIGO_TIPO_CAUSANTE", "TIPO_CAUSANTE", "RUT_BENEFICIARIO",
+                "NOMBRE_BENEFICIARIO", "CODIGO_TIPO_BENEFICIARIO", "TIPO_BENEFICIARIO", "CODIGO_TIPO_BENEFICIO", "TIPO_BENEFICIO",
+                "RUT_EMPLEADOR", "NOMBRE_EMPLEADOR", "FECHA_RECONOCIMIENTO", "TRAMO", "MONTO_BENEFICIO", "CODIGO_ESTADO_TUPLA", 
+                "GLOSA_ESTADO_TUPLA", "PROMEDIO_RENTA", Environment.NewLine).Split());
+             
+            foreach (var item in list)
+            {
+                sb.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}",
+                    item.NUM_CORRELATIVO, item.RUT_CAUSANTE, item.NOMBRE_CAUSANTE, item.CODIGO_TIPO_CAUSANTE,
+                    item.TIPO_CAUSANTE, item.RUT_BENEFICIARIO, item.NOMBRE_BENEFICIARIO, item.CODIGO_TIPO_BENEFICIARIO,
+                    item.TIPO_BENEFICIARIO, item.CODIGO_TIPO_BENEFICIO, item.TIPO_BENEFICIO, item.RUT_EMPLEADOR, item.NOMBRE_EMPLEADOR,
+                    item.FECHA_RECONOCIMIENTO, item.TRAMO, item.MONTO_BENEFICIO, item.CODIGO_ESTADO_TUPLA, item.GLOSA_ESTADO_TUPLA, item.PROMEDIO_RENTA, Environment.NewLine).Split()); 
+
+            }
+            var response = System.Web.HttpContext.Current.Response;
+            response.BufferOutput = true;
+            response.Clear();
+            response.ClearHeaders();
+            response.ContentEncoding = Encoding.Unicode;
+            response.AddHeader("content-disposition", "attachment;filename=Causantes.CSV ");
+            response.ContentType = "text/csv";
+            response.Write(sb.ToString());
+            response.End();
+
         }
     }
 }

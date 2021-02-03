@@ -1,9 +1,10 @@
-﻿@model List<RentaWEB.Models.Causante>
+﻿
 @{
     ViewBag.Title = "Descargar";
 }
 
 <h2>Descargar</h2>
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -16,10 +17,10 @@
 
     {
         @Html.AntiForgeryToken()
-    <div class="row">
-        <div class="col-lg col-md col-sm">
-            <div class="card">
-                
+        <div class="row">
+            <div class="col-lg col-md col-sm">
+               
+
                     <table class="table">
                         <thead>
                             <tr>
@@ -80,8 +81,8 @@
                     </table>
                 </div>
             </div>
-        </div>
-    
+       
+
         <div class="row">
             <input type="submit" name="id" value="Descargar" class="btn btn-success" />
 
