@@ -19,6 +19,7 @@ namespace RentaWEB2._0.Controllers
     public class CausantesController : Controller
     {
         private Municipalidad db = new Municipalidad();
+        
 
         // GET: Causantes
         public ActionResult Index()
@@ -173,8 +174,7 @@ namespace RentaWEB2._0.Controllers
 
 
 
-                try
-                {
+                
                     CsvFileDescription csvFileDescription = new CsvFileDescription
                     {
                         SeparatorChar = '|',
@@ -187,17 +187,132 @@ namespace RentaWEB2._0.Controllers
                     IEnumerable<Causante> list = csvContext.Read<Causante>(streamReader, csvFileDescription);
                     db.Causante.AddRange(list);
                     db.SaveChanges();
-                    ViewBag.Message = "Archivo Subido";
+                List<Funcionario> funcionarios = new List<Funcionario>();
+                foreach (var item in db.Causante)
+                {
+                    String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
+                    String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
+                    short id_Funcionario = item.NUM_CORRELATIVO;
+                    String Rut = item.RUT_CAUSANTE;
+                    if (item.NOMBRE_CAUSANTE.Length == 35)
+                    {
+                        for (int i = 0; i == subs.Length; i++)
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    apellido2 = subs[i];
+                                    break;
+                                case 1:
+                                    subapellido3 = subs[i];
+                                    break;
+                                case 2:
+                                    subapellido2 = subs[i];
+                                    break;
+                                case 3:
+                                    subapellido1 = subs[i];
+                                    break;
+                                case 4:
+
+                                    nombre2 = subs[i];
+                                    break;
+                                case 5:
+                                    nombre1 = subs[i];
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                            apellido1 = subapellido1 + " " + subapellido2 + " " + subapellido3;
+                            apellidos = apellido1 + " " + apellido2;
+                            nombres = nombre1 + " " + nombre2;
+                        }
+
+                    }
+                    else if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("GONZALEZ ACEVEDO"))
+                    {
+                        for (int i = 0; i == subs.Length; i++)
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    apellido2 = subs[i];
+                                    break;
+                                case 1:
+                                    apellido1 = subs[i];
+                                    break;
+                                case 2:
+                                    nombre1 = subs[i];
+                                    break;
+
+
+                                default:
+                                    break;
+                            }
+
+                            apellidos = apellido1 + " " + apellido2;
+                            nombres = nombre1;
+                        }
+
+                    }
+
+                    else
+                    {
+                        for (int i = 0; i == subs.Length; i++)
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    apellido2 = subs[i];
+                                    break;
+                                case 1:
+                                    apellido1 = subs[i];
+                                    break;
+                                case 2:
+                                    nombre2 = subs[i];
+                                    break;
+                                case 3:
+                                    nombre1 = subs[i];
+                                    break;
+
+
+
+                                default:
+                                    break;
+                            }
+
+                            apellidos = apellido1 + " " + apellido2;
+                            nombres = nombre1 + " " + nombre2;
+                        }
+                    }
+                    Funcionario funcionario = new Funcionario();
+                    funcionario.Id_Funcionario = id_Funcionario;
+                    funcionario.Activo = null;
+                    funcionario.Rut = Rut;
+                    funcionario.Nombres = nombres;
+                    funcionario.Apellidos = apellidos;
+                    funcionario.Sexo = null;
+                    funcionario.EstadoCivil = null;
+                    funcionario.Fec_nacimiento = null;
+                    funcionario.Direccion = null;
+                    funcionario.RentaPromedio = null;
+                    db.Funcionario.Add(funcionario);
+                    db.SaveChangesAsync();
+
+                }
+               
+
+
+                ViewBag.Message = "Archivo Subido";
                     return Redirect("Descargar");
 
-                }
-                catch (Exception)
-                {
-                    ViewBag.Message = "Archivo erroneo";
+                
+                
+                    //ViewBag.Message = "Archivo erroneo";
 
-                }
+                
 
-                return View();
+                //return View();
             }
 
 

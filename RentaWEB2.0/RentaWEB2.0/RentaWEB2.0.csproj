@@ -182,11 +182,13 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\CausantesController.cs" />
+    <Compile Include="Controllers\FuncionariosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Asignacion_Familiar.cs" />
     <Compile Include="Models\Causante.cs" />
     <Compile Include="Models\Funcionario.cs" />
     <Compile Include="Models\Municipalidad.cs" />
@@ -251,6 +253,12 @@
     <Content Include="Views\Causantes\Inicio.cshtml" />
     <Content Include="Views\Causantes\Insertar.cshtml" />
     <Content Include="Views\Causantes\Descargar.cshtml" />
+    <Content Include="Views\Funcionarios\Create.cshtml" />
+    <Content Include="Views\Funcionarios\Delete.cshtml" />
+    <Content Include="Views\Funcionarios\Details.cshtml" />
+    <Content Include="Views\Funcionarios\Edit.cshtml" />
+    <Content Include="Views\Funcionarios\Index.cshtml" />
+    <Content Include="Views\Funcionarios\Proceso.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
