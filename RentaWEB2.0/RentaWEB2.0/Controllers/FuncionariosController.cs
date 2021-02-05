@@ -233,21 +233,17 @@ namespace RentaWEB2._0.Controllers
                 
                 Funcionario funcionario = new Funcionario();
                 funcionario.Id_Funcionario = id_Funcionario;
-                funcionario.Activo = null;
                 funcionario.Rut = Rut;
                 funcionario.Nombres = nombres;
                 funcionario.Apellidos = apellidos;
-                funcionario.Sexo = null;
-                funcionario.EstadoCivil = null;
-                funcionario.Fec_nacimiento = null;
-                funcionario.Direccion = null;
-                funcionario.RentaPromedio = null;
-                db.Funcionario.Add(funcionario);
+               
+                db.Funcionario.Add();
                 db.SaveChanges();
 
 
 
             }
+
             return Redirect("../Causantes/Descargar");
         }
 
