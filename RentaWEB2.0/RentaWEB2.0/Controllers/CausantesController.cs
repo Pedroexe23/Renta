@@ -19,12 +19,39 @@ namespace RentaWEB2._0.Controllers
     public class CausantesController : Controller
     {
         private Municipalidad db = new Municipalidad();
-        
+
 
         // GET: Causantes
         public ActionResult Index()
         {
             return View(db.Causante.ToList());
+        }
+        [HttpPost]
+        public ActionResult Index(string Actualizar, [Bind(Include = "NUM_CORRELATIVO,RUT_CAUSANTE,NOMBRE_CAUSANTE,CODIGO_TIPO_CAUSANTE,TIPO_CAUSANTE,RUT_BENEFICIARIO,NOMBRE_BENEFICIARIO,CODIGO_TIPO_BENEFICIARIO,TIPO_BENEFICIARIO,CODIGO_TIPO_BENEFICIO,TIPO_BENEFICIO,RUT_EMPLEADOR,NOMBRE_EMPLEADOR,FECHA_RECONOCIMIENTO,TRAMO,MONTO_BENEFICIO,CODIGO_ESTADO_TUPLA,GLOSA_ESTADO_TUPLA,PROMEDIO_RENTA")] Causante causante)
+        {
+          
+            int tramo = 0;
+                short monto = 0;
+            foreach (var item in db.Causante)
+            {
+                tramo = item.TRAMO;
+                foreach (var asig in db.Asignacion_Familiar)
+                {
+                    if (tramo==asig.Tramo)
+                    {
+                        monto = (short)asig.Monto;
+                    }
+
+                }
+               
+     
+               
+                
+
+               db.Entry(causante.MONTO_BENEFICIO = monto).State = EntityState.Modified;
+               db.SaveChanges();
+            }
+            return Index();
         }
 
         // GET: Causantes/Details/5
@@ -165,16 +192,18 @@ namespace RentaWEB2._0.Controllers
             }
             else
             {
-                String fileName = Path.GetFileName(Files.FileName);
+                try
+                {
+                    String fileName = Path.GetFileName(Files.FileName);
 
-                String folderpath = Path.Combine(Server.MapPath("~/Views/Causantes/descargas"), fileName);
-
-
-                Files.SaveAs(folderpath);
-
+                    String folderpath = Path.Combine(Server.MapPath("~/Views/Causantes/descargas"), fileName);
 
 
-                
+                    Files.SaveAs(folderpath);
+
+
+
+
                     CsvFileDescription csvFileDescription = new CsvFileDescription
                     {
                         SeparatorChar = '|',
@@ -187,127 +216,25 @@ namespace RentaWEB2._0.Controllers
                     IEnumerable<Causante> list = csvContext.Read<Causante>(streamReader, csvFileDescription);
                     db.Causante.AddRange(list);
                     db.SaveChanges();
-                List<Funcionario> funcionarios = new List<Funcionario>();
-                foreach (var item in db.Causante)
+
+
+
+
+
+                    ViewBag.Message = "Archivo Subido";
+                    return Redirect("../Funcionarios/Proceso");
+                }
+                catch (Exception)
                 {
-                    String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
-                    String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
-                    short id_Funcionario = item.NUM_CORRELATIVO;
-                    String Rut = item.RUT_CAUSANTE;
-                    if (item.NOMBRE_CAUSANTE.Length == 35)
-                    {
-                        for (int i = 0; i == subs.Length; i++)
-                        {
-                            switch (i)
-                            {
-                                case 0:
-                                    apellido2 = subs[i];
-                                    break;
-                                case 1:
-                                    subapellido3 = subs[i];
-                                    break;
-                                case 2:
-                                    subapellido2 = subs[i];
-                                    break;
-                                case 3:
-                                    subapellido1 = subs[i];
-                                    break;
-                                case 4:
-
-                                    nombre2 = subs[i];
-                                    break;
-                                case 5:
-                                    nombre1 = subs[i];
-                                    break;
-
-                                default:
-                                    break;
-                            }
-                            apellido1 = subapellido1 + " " + subapellido2 + " " + subapellido3;
-                            apellidos = apellido1 + " " + apellido2;
-                            nombres = nombre1 + " " + nombre2;
-                        }
-
-                    }
-                    else if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("GONZALEZ ACEVEDO"))
-                    {
-                        for (int i = 0; i == subs.Length; i++)
-                        {
-                            switch (i)
-                            {
-                                case 0:
-                                    apellido2 = subs[i];
-                                    break;
-                                case 1:
-                                    apellido1 = subs[i];
-                                    break;
-                                case 2:
-                                    nombre1 = subs[i];
-                                    break;
-
-
-                                default:
-                                    break;
-                            }
-
-                            apellidos = apellido1 + " " + apellido2;
-                            nombres = nombre1;
-                        }
-
-                    }
-
-                    else
-                    {
-                        for (int i = 0; i == subs.Length; i++)
-                        {
-                            switch (i)
-                            {
-                                case 0:
-                                    apellido2 = subs[i];
-                                    break;
-                                case 1:
-                                    apellido1 = subs[i];
-                                    break;
-                                case 2:
-                                    nombre2 = subs[i];
-                                    break;
-                                case 3:
-                                    nombre1 = subs[i];
-                                    break;
-
-
-
-                                default:
-                                    break;
-                            }
-
-                            apellidos = apellido1 + " " + apellido2;
-                            nombres = nombre1 + " " + nombre2;
-                        }
-                    }
-                    Funcionario funcionario = new Funcionario();
-                    funcionario.Id_Funcionario = id_Funcionario;
-                    funcionario.Rut = Rut;
-                    funcionario.Nombres = nombres;
-                    funcionario.Apellidos = apellidos;
-
-                    db.Funcionario.Add(funcionario);
-                    db.SaveChangesAsync();
+                    ViewBag.Message = "Archivo erroneo";
+                    return View();
 
                 }
-               
 
 
-                ViewBag.Message = "Archivo Subido";
-                    return Redirect("Descargar");
 
-                
-                
-                    //ViewBag.Message = "Archivo erroneo";
 
-                
 
-                //return View();
             }
 
 
@@ -330,7 +257,7 @@ namespace RentaWEB2._0.Controllers
             gv.DataBind();
 
             Response.ClearContent();
-            Response.AddHeader("content-disposition",String.Format( "attachment;filename=Causantes.xls", DateTime.Now));
+            Response.AddHeader("content-disposition", String.Format("attachment;filename=Causantes.xls", DateTime.Now));
             Response.ContentType = "application/excel";
             Response.Charset = "UTF-8";
             Response.ContentEncoding = Encoding.UTF8;
@@ -340,5 +267,6 @@ namespace RentaWEB2._0.Controllers
             Response.Write(sb.ToString());
             Response.End();
         }
-}   }
+    }
+}
 

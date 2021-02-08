@@ -132,118 +132,100 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Proceso(String id)
         {
+            List<Funcionario> funcionarios = new List<Funcionario>();
             foreach (var item in db.Causante)
             {
-                
-                String nombres=" ", apellidos=" ",nombre1=" ",nombre2=" ",apellido1=" ",apellido2=" ",subapellido1=" ", subapellido2=" ", subapellido3=" ";
-                String [] subs = item.NOMBRE_CAUSANTE.Split(' ');
+                String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
+                String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
                 short id_Funcionario = item.NUM_CORRELATIVO;
                 String Rut = item.RUT_CAUSANTE;
-                if (item.NOMBRE_CAUSANTE.Length == 35)
+                if (item.NOMBRE_CAUSANTE.Substring(0,16).Equals("CARTER DE LA PAZ"))
                 {
-                    for (int i = 0; i == subs.Length; i++)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                apellido2 = subs[i];
-                                break;
-                            case 1:
-                                subapellido3 = subs[i];
-                                break;
-                            case 2:
-                                subapellido2 = subs[i];
-                                break;
-                            case 3:
-                                subapellido1 = subs[i];
-                                break;
-                            case 4:
-                               
-                                nombre2 = subs[i];
-                                    break;
-                            case 5:
-                                nombre1 = subs[i];
-                                break;
-          
-                            default:
-                                break;
-                        }
-                        apellido1 = subapellido1+" "+ subapellido2+" "+subapellido3;
-                        apellidos = apellido1 +" "+ apellido2;
-                        nombres = nombre1 + " " + nombre2;
-                    }
-                    
+
+
+
+                    apellido2 = subs[0];
+
+                    subapellido3 = subs[1];
+
+                    subapellido2 = subs[2];
+
+                    subapellido1 = subs[3];
+
+
+                    nombre2 = subs[4];
+
+                    nombre1 = subs[5];
+
+
+
+                    apellido1 = subapellido3 + " " + subapellido2 + " " + subapellido1 ;
+                    apellidos = apellido1 + " " + apellido2;
+                    nombres = nombre1 + " " + nombre2;
+
+
                 }
                 else if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("GONZALEZ ACEVEDO"))
                 {
-                    for (int i = 0; i == subs.Length; i++)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                apellido2 = subs[i];
-                                break;
-                            case 1:
-                                apellido1 = subs[i];
-                                break;
-                            case 2:
-                                nombre1 = subs[i];
-                                break;
-                            
-                           
-                            default:
-                                break;
-                        }
-                       
-                        apellidos = apellido1 + " " + apellido2;
-                        nombres = nombre1;
-                    }
+
+
+
+                    apellido2 = subs[0];
+
+
+                    apellido1 = subs[1];
+
+
+                    nombre1 = subs[2];
+
+
+
+
+
+
+                    apellidos = apellido1 + " " + apellido2;
+                    nombres = nombre1;
+
 
                 }
-                
+
                 else
                 {
-                    for (int i = 0; i == subs.Length; i++)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                apellido2 = subs[i];
-                                break;
-                            case 1:
-                                apellido1 = subs[i];
-                                break;
-                            case 2:
-                                nombre2 = subs[i];
-                                break;
-                            case 3:
-                                nombre1 = subs[i];
-                                break;
+
+
+                    apellido2 = subs[0];
+
+
+                    apellido1 = subs[1];
+
+
+                    nombre2 = subs[2];
+
+
+                    nombre1 = subs[3];
 
 
 
-                            default:
-                                break;
-                        }
 
-                        apellidos = apellido1 + " " + apellido2;
-                        nombres = nombre1+" "+ nombre2;
-                    }
+
+
+                    apellidos = apellido1 + " " + apellido2;
+                    nombres = nombre1 + " " + nombre2;
+
                 }
-                
                 Funcionario funcionario = new Funcionario();
                 funcionario.Id_Funcionario = id_Funcionario;
                 funcionario.Rut = Rut;
                 funcionario.Nombres = nombres;
                 funcionario.Apellidos = apellidos;
+                funcionarios.Add(funcionario);
                
-                db.Funcionario.Add();
-                db.SaveChanges();
-
-
-
+                
             }
+            db.Funcionario.AddRange(funcionarios);
+            db.SaveChanges();
 
+           
             return Redirect("../Causantes/Descargar");
         }
 

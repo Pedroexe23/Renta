@@ -1,0 +1,25 @@
+﻿.separacionU {
+    margin-left: 23px;
+}
+
+.separacionC {
+    margin-right: 25px;
+}
+
+.separacionB {
+    margin-right: 25px;
+}
+
+.separacion_Boton1 {
+    text-align: left;
+    margin-left: 25px;
+    
+}
+.separacion_Boton2 {
+    text-align: right;
+    margin-right: 25px;
+    
+}
+.agrandar{
+    width:180px;
+}
