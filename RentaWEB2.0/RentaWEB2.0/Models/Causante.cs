@@ -1,5 +1,6 @@
 namespace RentaWEB2._0.Models
 {
+    using DocumentFormat.OpenXml.Wordprocessing;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -10,6 +11,7 @@ namespace RentaWEB2._0.Models
     public partial class Causante
     {
         [Key]
+        
         [Column(Order = 0)]
         public byte NUM_CORRELATIVO { get; set; }
 
