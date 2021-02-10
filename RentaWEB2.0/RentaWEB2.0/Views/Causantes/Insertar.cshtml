@@ -1,4 +1,5 @@
-﻿
+﻿<%@Page Language="C#" %>
+<%@Import Namespace="System.Globalization" %>
 @{
     ViewBag.Title = "Insertar";
 }
@@ -16,13 +17,13 @@
 <body>
     @using (Html.BeginForm("Insertar", "Causantes", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-
+        <a href="/Causantes/Index"><input type="button" value="Volver" class="btn btn-info " /></a>
         <div class="card">
             <div class="card-body">
                 @Html.TextBox("Files", "", new { type = "file" }) <br />
 
-                
-         
+
+
 
                 @{
                     if (ViewBag.Message != null)
@@ -32,7 +33,7 @@
 
                 }
             </div>
- 
+
             <input type="submit" value="subir" class="btn btn-success" />
         </div>
 

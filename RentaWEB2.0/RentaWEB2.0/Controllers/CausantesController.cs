@@ -15,6 +15,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI;
 using System.Data.SqlClient;
 
+
 namespace RentaWEB2._0.Controllers
 {
     public class CausantesController : Controller
@@ -25,11 +26,13 @@ namespace RentaWEB2._0.Controllers
         // GET: Causantes
         public ActionResult Index()
         {
+
             return View(db.Causante.ToList());
         }
         [HttpPost]
         public ActionResult Index(string Actualizar, Causante causante)
         {
+
             List<Causante> causantes = new List<Causante>();
             int tramo = 0;
                 short monto = 0;
@@ -71,7 +74,7 @@ namespace RentaWEB2._0.Controllers
                 conexion.Open();
                 String Cadena = "update Causante set MONTO_BENEFICIO = "+ causante.MONTO_BENEFICIO +" where NUM_CORRELATIVO ="+causante.NUM_CORRELATIVO+"";
                 
-                    //"update Causante set TRAMO= " + causante.MONTO_BENEFICIO + "Where NUM_CORRELATIVO=" + causante.NUM_CORRELATIVO + ""
+                   
                 SqlCommand command = new SqlCommand(Cadena, conexion);
                 int cant;
                 cant=command.ExecuteNonQuery();
@@ -186,6 +189,7 @@ namespace RentaWEB2._0.Controllers
         }
         public ActionResult Inicio()
         {
+
             return View();
         }
 
@@ -193,6 +197,7 @@ namespace RentaWEB2._0.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Inicio(FormCollection formCollection)
         {
+
             Usuario usuario = new Usuario();
             String User = formCollection["nombre-txt"];
             String Contrasena = formCollection["contrasena-txt"];
@@ -206,6 +211,7 @@ namespace RentaWEB2._0.Controllers
         [HttpGet]
         public ActionResult Insertar()
         {
+
             return View();
         }
 
@@ -272,6 +278,7 @@ namespace RentaWEB2._0.Controllers
 
         public ActionResult Descargar()
         {
+
             return View(db.Causante.ToList());
         }
 
@@ -279,6 +286,7 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public void Descargar(String id)
         {
+
             var gv = new GridView();
            
             gv.DataSource = db.Causante.OrderBy(x => x.NUM_CORRELATIVO).ToList();
