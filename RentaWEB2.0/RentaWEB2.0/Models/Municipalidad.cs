@@ -8,7 +8,7 @@ namespace RentaWEB2._0.Models
     public partial class Municipalidad : DbContext
     {
         public Municipalidad()
-            : base("name=Municipalidad1")
+            : base("name=Municipalidad")
         {
         }
 

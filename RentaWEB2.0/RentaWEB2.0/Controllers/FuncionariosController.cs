@@ -137,7 +137,7 @@ namespace RentaWEB2._0.Controllers
             {
                 String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
                 String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
-                short id_Funcionario = item.NUM_CORRELATIVO;
+                short id_Funcionario = (short) item.NUM_CORRELATIVO;
                 String Rut = item.RUT_CAUSANTE;
                 if (item.NOMBRE_CAUSANTE.Substring(0,16).Equals("CARTER DE LA PAZ"))
                 {
