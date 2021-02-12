@@ -139,6 +139,8 @@ namespace RentaWEB2._0.Controllers
                 String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
                 short id_Funcionario = (short) item.NUM_CORRELATIVO;
                 String Rut = item.RUT_CAUSANTE;
+                int Renta = (int) item.PROMEDIO_RENTA;
+
                 if (item.NOMBRE_CAUSANTE.Substring(0,16).Equals("CARTER DE LA PAZ"))
                 {
 
@@ -218,6 +220,7 @@ namespace RentaWEB2._0.Controllers
                 funcionario.Rut = Rut;
                 funcionario.Nombres = nombres;
                 funcionario.Apellidos = apellidos;
+                funcionario.RentaPromedio = Renta;
                 funcionarios.Add(funcionario);
                
                 

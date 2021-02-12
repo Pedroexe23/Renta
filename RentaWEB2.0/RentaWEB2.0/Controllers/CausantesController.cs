@@ -1,19 +1,17 @@
-﻿using System;
+﻿using RentaWEB2._0.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using LINQtoCSV;
-using RentaWEB2._0.Models;
-using ClosedXML.Excel;
-using System.Text;
-using System.Web.UI.WebControls;
 using System.Web.UI;
-using System.Data.SqlClient;
+using System.Web.UI.WebControls;
 
 
 namespace RentaWEB2._0.Controllers
@@ -33,19 +31,15 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Index(string Actualizar, Causante causante)
         {
-            List<Asignacion_Familiar> asignacions = new List<Asignacion_Familiar>();
+            
             List<Causante> causantes = new List<Causante>();
             int tramo = 0;
             int monto = 0;
             int Renta = 0;
+            int[] tramos = new int [9] ;
+            int[] montos= new int [9] ;
 
-            foreach (var item in db.Asignacion_Familiar)
-            {
-                Asignacion_Familiar asignacion_Familiar = new Asignacion_Familiar();
-                asignacion_Familiar.Tramo = item.Tramo;
-                asignacion_Familiar.Monto = item.Monto;
-                asignacions.Add(asignacion_Familiar)
-            }
+          
 
             foreach (var item in db.Causante)
             {
@@ -73,23 +67,52 @@ namespace RentaWEB2._0.Controllers
               
                     if (Renta<=342246)
                     {
-                        
-                    
+                        foreach (var list in db.Asignacion_Familiar)
+                        {
+                        if (list.Tramo==1)
+                        {
+                            tramo = (int)list.Tramo;
+                            monto = (int) list.Monto;
+                        }
 
+                        }
 
                      }
                     else if (Renta > 342246 && Renta <=500033)
                     {
+                        foreach (var list in db.Asignacion_Familiar)
+                        {
+                        if (list.Tramo == 2)
+                        {
+                            tramo = (int)list.Tramo;
+                            monto = (int)list.Monto;
+                        }
+                    }
 
                     }
                     else if (Renta > 500033 && Renta <= 779882 )
                     {
-
+                       foreach (var list in db.Asignacion_Familiar)
+                        {
+                        if (list.Tramo == 3)
+                        {
+                            tramo = (int)list.Tramo;
+                            monto = (int)list.Monto;
+                        }
+                    }
                     }
                     else
                     {
-
+                        foreach (var list in db.Asignacion_Familiar)
+                         {
+                        if (list.Tramo == 4)
+                        {
+                            tramo = (int)list.Tramo;
+                            monto = (int)list.Monto;
+                        }
                     }
+
+                }
                     
 
                     
@@ -101,7 +124,7 @@ namespace RentaWEB2._0.Controllers
 
                 conexion.Close();
                 conexion.Open();
-                String Cadena = "update Causante set MONTO_BENEFICIO = " + causante.MONTO_BENEFICIO + " where NUM_CORRELATIVO =" + causante.NUM_CORRELATIVO + "";
+                String Cadena = "update Causante set MONTO_BENEFICIO = " + monto + ", TRAMO=" + tramo+" where NUM_CORRELATIVO =" + causante.NUM_CORRELATIVO + "";
 
 
                 SqlCommand command = new SqlCommand(Cadena, conexion);
