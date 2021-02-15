@@ -190,6 +190,9 @@
     </Compile>
     <Compile Include="Models\Asignacion_Familiar.cs" />
     <Compile Include="Models\Causante.cs" />
+    <Compile Include="Models\Dao\CausantesDAO.cs" />
+    <Compile Include="Models\Dao\DocumentoDAO.cs" />
+    <Compile Include="Models\Documentos.cs" />
     <Compile Include="Models\Funcionario.cs" />
     <Compile Include="Models\Municipalidad.cs" />
     <Compile Include="Models\Usuario.cs" />
@@ -260,6 +263,7 @@
     <Content Include="Views\Funcionarios\Edit.cshtml" />
     <Content Include="Views\Funcionarios\Index.cshtml" />
     <Content Include="Views\Funcionarios\Proceso.cshtml" />
+    <Content Include="Views\Causantes\Proceso_de_guardado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

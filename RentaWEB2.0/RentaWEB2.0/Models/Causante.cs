@@ -19,7 +19,7 @@ namespace RentaWEB2._0.Models
         [StringLength(50)]
         public string NOMBRE_CAUSANTE { get; set; }
 
-        public int  CODIGO_TIPO_CAUSANTE { get; set; }
+        public int CODIGO_TIPO_CAUSANTE { get; set; }
 
         [Key]
         [Column(Order = 1)]

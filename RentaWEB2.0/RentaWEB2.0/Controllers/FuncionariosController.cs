@@ -140,6 +140,8 @@ namespace RentaWEB2._0.Controllers
                 short id_Funcionario = (short) item.NUM_CORRELATIVO;
                 String Rut = item.RUT_CAUSANTE;
                 int Renta = (int) item.PROMEDIO_RENTA;
+                int Activo; 
+
 
                 if (item.NOMBRE_CAUSANTE.Substring(0,16).Equals("CARTER DE LA PAZ"))
                 {
