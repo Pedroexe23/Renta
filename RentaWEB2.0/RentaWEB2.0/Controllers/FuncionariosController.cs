@@ -133,14 +133,40 @@ namespace RentaWEB2._0.Controllers
         public ActionResult Proceso(String id)
         {
             List<Funcionario> funcionarios = new List<Funcionario>();
-            foreach (var item in db.Causante)
+            List<Funcionario> Funcionarios = new List<Funcionario>();
+            
+            foreach (var item in db.Funcionario)
             {
+                Funcionario funcionario = new Funcionario();
+                funcionario.Id_Funcionario = item.Id_Funcionario;
+                funcionario.Activo = item.Activo;
+                funcionario.Rut = item.Rut;
+                funcionario.Nombres = item.Nombres;
+                funcionario.Apellidos = item.Apellidos;
+                funcionario.RentaPromedio = item.RentaPromedio;
+                funcionario.Sexo = item.Sexo;
+                funcionario.EstadoCivil = item.EstadoCivil;
+                funcionario.Fec_nacimiento = item.Fec_nacimiento;
+                funcionario.Direccion = item.Direccion;
+               
+               
+
+
+                Funcionarios.Add(funcionario);
+            }
+
+            if (Funcionarios == null)
+            {
+
+            
+                foreach (var item in db.Causante)
+                {
                 String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
                 String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
                 short id_Funcionario = (short) item.NUM_CORRELATIVO;
                 String Rut = item.RUT_CAUSANTE;
                 int Renta = (int) item.PROMEDIO_RENTA;
-                int Activo; 
+                short Activo=0; 
 
 
                 if (item.NOMBRE_CAUSANTE.Substring(0,16).Equals("CARTER DE LA PAZ"))
@@ -223,16 +249,137 @@ namespace RentaWEB2._0.Controllers
                 funcionario.Nombres = nombres;
                 funcionario.Apellidos = apellidos;
                 funcionario.RentaPromedio = Renta;
-                funcionarios.Add(funcionario);
+                funcionario.Activo = Activo;
+                    funcionario.Sexo = 0;
+                    funcionario.EstadoCivil = 0;
+                    funcionario.Fec_nacimiento = null;
+                    funcionario.Direccion = "Null";
+
+                    funcionarios.Add(funcionario);
                
                 
+                }
+                 db.Funcionario.AddRange(funcionarios);
+                 db.SaveChanges();
+
+                return Redirect("../Causantes/Descargar");
+
+            }
+            else
+            {
+
+                return Redirect("../Causantes/Descargar");
+            }
+            
+            /*foreach (var item in db.Causante)
+            {
+                String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
+                String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
+                short id_Funcionario = (short)item.NUM_CORRELATIVO;
+                String Rut = item.RUT_CAUSANTE;
+                int Renta = (int)item.PROMEDIO_RENTA;
+                short Activo = 0;
+
+
+                if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("CARTER DE LA PAZ"))
+                {
+
+
+
+                    apellido2 = subs[0];
+
+                    subapellido3 = subs[1];
+
+                    subapellido2 = subs[2];
+
+                    subapellido1 = subs[3];
+
+
+                    nombre2 = subs[4];
+
+                    nombre1 = subs[5];
+
+
+
+                    apellido1 = subapellido3 + " " + subapellido2 + " " + subapellido1;
+                    apellidos = apellido1 + " " + apellido2;
+                    nombres = nombre1 + " " + nombre2;
+
+
+                }
+                else if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("GONZALEZ ACEVEDO"))
+                {
+
+
+
+                    apellido2 = subs[0];
+
+
+                    apellido1 = subs[1];
+
+
+                    nombre1 = subs[2];
+
+
+
+
+
+
+                    apellidos = apellido1 + " " + apellido2;
+                    nombres = nombre1;
+
+
+                }
+
+                else
+                {
+
+
+                    apellido2 = subs[0];
+
+
+                    apellido1 = subs[1];
+
+
+                    nombre2 = subs[2];
+
+
+                    nombre1 = subs[3];
+
+
+
+
+
+
+                    apellidos = apellido1 + " " + apellido2;
+                    nombres = nombre1 + " " + nombre2;
+
+                }
+                Funcionario funcionario = new Funcionario();
+                funcionario.Id_Funcionario = id_Funcionario;
+                funcionario.Rut = Rut;
+                funcionario.Nombres = nombres;
+                funcionario.Apellidos = apellidos;
+                funcionario.RentaPromedio = Renta;
+                funcionario.Activo = Activo;
+                funcionario.Sexo = 0;
+                funcionario.EstadoCivil = 0;
+                funcionario.Fec_nacimiento = null;
+                funcionario.Direccion = "Null";
+
+                funcionarios.Add(funcionario);
+
+
             }
             db.Funcionario.AddRange(funcionarios);
             db.SaveChanges();
 
-           
             return Redirect("../Causantes/Descargar");
+            */
         }
 
+
+
     }
-}
+
+    }

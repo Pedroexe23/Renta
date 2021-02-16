@@ -272,6 +272,7 @@ namespace RentaWEB2._0.Controllers
         public ActionResult Insertar(HttpPostedFileBase Files)
         {
            CausantesDAO causanteDAO = new CausantesDAO();
+            List<Causante> causa = new List<Causante>();
             DocumentoDAO documentoDAO = new DocumentoDAO();
             if (Files == null || Files.ContentLength == 0)
             {
@@ -392,7 +393,7 @@ namespace RentaWEB2._0.Controllers
                                 causantes.GLOSA_ESTADO_TUPLA = values[17];
                                 causantes.PROMEDIO_RENTA = Promedio_Renta;
                                 causanteDAO.Crear(causantes);
-
+                                //causa.Add(causantes);
                                 count = count + 1;
 
 
@@ -420,14 +421,15 @@ namespace RentaWEB2._0.Controllers
                     doc.Fecha = DateTime.Parse(Fechas);
                     documentoDAO.Crear(doc);
 
+                    
 
 
-
-                    // db.Causante.AddRange(causa);
-                    //db.SaveChanges();
+                    //db.Causante.AddRange(causa);
+                    // db.SaveChanges();
                     ViewBag.Message = "Archivo Subido";
-                    // 
-                    return Redirect("Proceso_de_guardado");
+                     return Redirect("Proceso_de_guardado");
+                    //return Redirect("../Funcionarios/Proceso");
+                    
 
                 }
                 catch (Exception ex )
@@ -450,44 +452,93 @@ namespace RentaWEB2._0.Controllers
         [HttpGet]
         public ActionResult Proceso_de_guardado()
         {
-
             CausantesDAO causanteDAO = new CausantesDAO();
+            List<Causante> causantesguardados = causanteDAO.GetCausantes();
             DocumentoDAO documentoDAO = new DocumentoDAO();
-            List<Causante> causantes =  new List<Causante>();
+            List<Causante> Causantes =  new List<Causante>();
+            int count = 0;
+           
             
-            foreach (var item in db.Causante)
-            {
-                Causante causante = new Causante();
-                causante.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
-                causante.RUT_CAUSANTE = item.RUT_CAUSANTE;
-                causante.NOMBRE_CAUSANTE = item.NOMBRE_CAUSANTE;
-                causante.CODIGO_TIPO_CAUSANTE = item.CODIGO_TIPO_CAUSANTE;
-                causante.TIPO_CAUSANTE = item.TIPO_CAUSANTE;
-                causante.RUT_BENEFICIARIO = item.RUT_BENEFICIARIO;
-                causante.NOMBRE_BENEFICIARIO = item.NOMBRE_BENEFICIARIO;
-                causante.CODIGO_TIPO_BENEFICIARIO = item.CODIGO_TIPO_BENEFICIARIO;
-                causante.TIPO_BENEFICIARIO = item.TIPO_BENEFICIARIO;
-                causante.CODIGO_TIPO_BENEFICIO = item.CODIGO_TIPO_BENEFICIO;
-                causante.TIPO_BENEFICIO = item.TIPO_BENEFICIO;
-                causante.RUT_EMPLEADOR = item.RUT_EMPLEADOR;
-                causante.NOMBRE_EMPLEADOR = item.NOMBRE_EMPLEADOR;
-                causante.FECHA_RECONOCIMIENTO = item.FECHA_RECONOCIMIENTO;
-                causante.TRAMO = item.TRAMO;
-                causante.MONTO_BENEFICIO = item.MONTO_BENEFICIO;
-                causante.CODIGO_ESTADO_TUPLA = item.CODIGO_ESTADO_TUPLA;
-                causante.GLOSA_ESTADO_TUPLA = item.GLOSA_ESTADO_TUPLA;
-                causante.PROMEDIO_RENTA = item.PROMEDIO_RENTA;
-
-            }
             
-            return View( causanteDAO.GetCausantes().OrderBy(Z => Z.NUM_CORRELATIVO).ToList());
+            
+           
         }
 
         [HttpPost]
-        public ActionResult Proceso_de_guardado(String id, List<Causante> causa, List<Documentos> documentos)
+        public ActionResult Proceso_de_guardado(String id)
         {
+            CausantesDAO causanteDAO = new CausantesDAO();
+            List<Causante> causantesguardados = causanteDAO.GetCausantes();
+            DocumentoDAO documentoDAO = new DocumentoDAO();
+            List<Causante> Causantes = new List<Causante>();
+            List<Causante> guardar = new List<Causante>();
+            int count = 0;
+            foreach (var item in db.Causante)
+            {
+                Causante causantes = new Causante();
+                causantes.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
+                causantes.RUT_CAUSANTE = item.RUT_CAUSANTE;
+                causantes.NOMBRE_CAUSANTE = item.NOMBRE_CAUSANTE;
+                causantes.CODIGO_TIPO_CAUSANTE = item.CODIGO_TIPO_CAUSANTE;
+                causantes.TIPO_CAUSANTE = item.TIPO_CAUSANTE;
+                causantes.RUT_BENEFICIARIO = item.RUT_BENEFICIARIO;
+                causantes.NOMBRE_BENEFICIARIO = item.NOMBRE_BENEFICIARIO;
+                causantes.CODIGO_TIPO_BENEFICIARIO = item.CODIGO_TIPO_BENEFICIARIO;
+                causantes.TIPO_BENEFICIARIO = item.TIPO_BENEFICIARIO;
+                causantes.CODIGO_TIPO_BENEFICIO = item.CODIGO_TIPO_BENEFICIO;
+                causantes.TIPO_BENEFICIO = item.TIPO_BENEFICIO;
+                causantes.RUT_EMPLEADOR = item.RUT_EMPLEADOR;
+                causantes.NOMBRE_EMPLEADOR = item.NOMBRE_EMPLEADOR;
+                causantes.FECHA_RECONOCIMIENTO = item.FECHA_RECONOCIMIENTO;
+                causantes.TRAMO = item.TRAMO;
+                causantes.MONTO_BENEFICIO = item.MONTO_BENEFICIO;
+                causantes.CODIGO_ESTADO_TUPLA = item.CODIGO_ESTADO_TUPLA;
+                causantes.GLOSA_ESTADO_TUPLA = item.GLOSA_ESTADO_TUPLA;
+                causantes.PROMEDIO_RENTA = item.PROMEDIO_RENTA;
+                foreach (var items in causantesguardados)
+                {
+                    Causante causante = new Causante();
+                    causante.NUM_CORRELATIVO = items.NUM_CORRELATIVO;
+                    causante.RUT_CAUSANTE = items.RUT_CAUSANTE;
+                    causante.NOMBRE_CAUSANTE = items.NOMBRE_CAUSANTE;
+                    causante.CODIGO_TIPO_CAUSANTE = items.CODIGO_TIPO_CAUSANTE;
+                    causante.TIPO_CAUSANTE = items.TIPO_CAUSANTE;
+                    causante.RUT_BENEFICIARIO = items.RUT_BENEFICIARIO;
+                    causante.NOMBRE_BENEFICIARIO = items.NOMBRE_BENEFICIARIO;
+                    causante.CODIGO_TIPO_BENEFICIARIO = items.CODIGO_TIPO_BENEFICIARIO;
+                    causante.TIPO_BENEFICIARIO = items.TIPO_BENEFICIARIO;
+                    causante.CODIGO_TIPO_BENEFICIO = items.CODIGO_TIPO_BENEFICIO;
+                    causante.TIPO_BENEFICIO = items.TIPO_BENEFICIO;
+                    causante.RUT_EMPLEADOR = items.RUT_EMPLEADOR;
+                    causante.NOMBRE_EMPLEADOR = items.NOMBRE_EMPLEADOR;
+                    causante.FECHA_RECONOCIMIENTO = items.FECHA_RECONOCIMIENTO;
+                    causante.TRAMO = items.TRAMO;
+                    causante.MONTO_BENEFICIO = items.MONTO_BENEFICIO;
+                    causante.CODIGO_ESTADO_TUPLA = items.CODIGO_ESTADO_TUPLA;
+                    causante.GLOSA_ESTADO_TUPLA = items.GLOSA_ESTADO_TUPLA;
+                    causante.PROMEDIO_RENTA = items.PROMEDIO_RENTA;
+                    if (!causante.Equals(causantes))
+                    {
+                       guardar.Add(causante);
+                        count = count + 1;
+                    }
+                }
+            }
+            if (count == 0)
+            {
+                return Redirect("../Funcionarios/Proceso");
 
-            return Redirect("../Funcionarios/Proceso");
+            }
+            else
+            {
+                db.Causante.AddRange(guardar);
+                db.SaveChanges();
+                return Redirect("../Funcionarios/Proceso");
+
+            }
+
+
+           
         }
 
 
@@ -514,6 +565,7 @@ namespace RentaWEB2._0.Controllers
 
             var gv = new GridView();
            
+         
             gv.DataSource = db.Causante.OrderBy(x => x.NUM_CORRELATIVO).ToList();
             gv.DataBind();
 
