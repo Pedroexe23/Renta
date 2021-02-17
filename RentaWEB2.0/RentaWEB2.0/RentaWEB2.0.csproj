@@ -192,9 +192,10 @@
     <Compile Include="Models\Causante.cs" />
     <Compile Include="Models\Dao\CausantesDAO.cs" />
     <Compile Include="Models\Dao\DocumentoDAO.cs" />
-    <Compile Include="Models\Documentos.cs" />
+    <Compile Include="Models\Documento.cs" />
     <Compile Include="Models\Funcionario.cs" />
     <Compile Include="Models\Municipalidad.cs" />
+    <Compile Include="Models\sysdiagrams.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
