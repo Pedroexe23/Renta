@@ -196,6 +196,7 @@ namespace Pruebas.Controllers.Tecnologia
                 funcionario.Direccion = "Null";
                 foreach (var items in db.Funcionarios)
                 {
+                    int count = 0;
                     Funcionario funcionario1 = new Funcionario();
                     if (items.Id_Funcionario==id_Funcionario && items.Rut.Equals(Rut))
                     {
@@ -206,7 +207,11 @@ namespace Pruebas.Controllers.Tecnologia
                     else
                     {
                         funcionario1.Activo = 0;
-                        
+                        count=1+count;
+                    }
+                    if ()
+                    {
+
                     }
                 }
 
