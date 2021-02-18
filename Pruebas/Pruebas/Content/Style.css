@@ -13,18 +13,18 @@
 .separacion_Boton1 {
     text-align: left;
     margin-left: 25px;
-    
 }
+
 .separacion_Boton2 {
     text-align: right;
     margin-right: 25px;
-    
-}
-.agrandar{
-    width:180px;
 }
 
-.table {
-    width: 20px;
-    height: 20px;
+.agrandar {
+    width: 180px;
+}
+
+table {
+    width: 50px;
+    height: 300px;
 }

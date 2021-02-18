@@ -1,0 +1,178 @@
+﻿@model Pruebas.Models.Tecnologia.Causante
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>Causante</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Asignacion_Familiar.Requisito_De_Sistema)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Asignacion_Familiar.Requisito_De_Sistema)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Funcionario.Rut)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Funcionario.Rut)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.RUT_CAUSANTE)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.RUT_CAUSANTE)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.NOMBRE_CAUSANTE)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.NOMBRE_CAUSANTE)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CODIGO_TIPO_CAUSANTE)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CODIGO_TIPO_CAUSANTE)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.TIPO_CAUSANTE)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.TIPO_CAUSANTE)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.RUT_BENEFICIARIO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.RUT_BENEFICIARIO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.NOMBRE_BENEFICIARIO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.NOMBRE_BENEFICIARIO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CODIGO_TIPO_BENEFICIARIO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CODIGO_TIPO_BENEFICIARIO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.TIPO_BENEFICIARIO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.TIPO_BENEFICIARIO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CODIGO_TIPO_BENEFICIO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CODIGO_TIPO_BENEFICIO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.TIPO_BENEFICIO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.TIPO_BENEFICIO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.RUT_EMPLEADOR)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.RUT_EMPLEADOR)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.NOMBRE_EMPLEADOR)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.NOMBRE_EMPLEADOR)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.FECHA_RECONOCIMIENTO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.FECHA_RECONOCIMIENTO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.MONTO_BENEFICIO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.MONTO_BENEFICIO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CODIGO_ESTADO_TUPLA)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CODIGO_ESTADO_TUPLA)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.GLOSA_ESTADO_TUPLA)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.GLOSA_ESTADO_TUPLA)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.PROMEDIO_RENTA)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.PROMEDIO_RENTA)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.NUM_CORRELATIVO }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

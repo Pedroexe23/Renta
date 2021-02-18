@@ -1,26 +1,22 @@
-﻿@{ 
-
-    ViewBag.Title = "Descargar";
+﻿
+@{
+    ViewBag.Title = "guardando";
 }
-
-<h2>Descargar</h2>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
+    <title></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link href="~/Content/Style.css" rel="stylesheet" />
-
 </head>
 <body>
-    @using (Html.BeginForm())
-    {
+    <div class="row">
+        <div class="col-lg col-md col-sm">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h1>¿Estas Seguro  que quieres guardar? </h1>
+                </div>
 
-        @Html.AntiForgeryToken()
-        <a href="/Causantes/Index"><input type="button" value="Inicio" class="btn btn-info " /></a>
-        <div class="row">
-            <div class="col-lg col-md col-sm">
                 <table class="table">
                     <thead>
                         <tr>
@@ -80,17 +76,16 @@
 
                     </tbody>
                 </table>
+
+                <div >
+                    <input type="submit" name="id" value="Si" class="btn btn-success agrandar separacion_Boton1 " />
+                    <a href="/Causantes/Index"> <input type="button" value="No" class="btn btn-danger agrandar separacion_Boton2 " /></a>
+                </div>
+
             </div>
+              
         </div>
-        <div class="row">
-            <input type="submit" name="id" value="Descargar" class="btn btn-success" />
-
-        </div>
-    }
-
-
-
-
-
+    </div>
 </body>
 </html>
+

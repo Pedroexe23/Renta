@@ -6,9 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using RentaWEB2._0.Models;
+using Pruebas.Models.Tecnologia;
 
-namespace RentaWEB2._0.Controllers
+namespace Pruebas.Controllers.Tecnologia
 {
     public class FuncionariosController : Controller
     {
@@ -17,7 +17,8 @@ namespace RentaWEB2._0.Controllers
         // GET: Funcionarios
         public ActionResult Index()
         {
-            return View(db.Funcionario.ToList());
+            var funcionarios = db.Funcionarios.Include(f => f.Causante);
+            return View(funcionarios.ToList());
         }
 
         // GET: Funcionarios/Details/5
@@ -27,7 +28,7 @@ namespace RentaWEB2._0.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Funcionario funcionario = db.Funcionario.Find(id);
+            Funcionario funcionario = db.Funcionarios.Find(id);
             if (funcionario == null)
             {
                 return HttpNotFound();
@@ -38,6 +39,7 @@ namespace RentaWEB2._0.Controllers
         // GET: Funcionarios/Create
         public ActionResult Create()
         {
+            ViewBag.Id_Funcionario = new SelectList(db.Causantes, "NUM_CORRELATIVO", "RUT_CAUSANTE");
             return View();
         }
 
@@ -50,11 +52,12 @@ namespace RentaWEB2._0.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Funcionario.Add(funcionario);
+                db.Funcionarios.Add(funcionario);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
+            ViewBag.Id_Funcionario = new SelectList(db.Causantes, "NUM_CORRELATIVO", "RUT_CAUSANTE", funcionario.Id_Funcionario);
             return View(funcionario);
         }
 
@@ -65,11 +68,12 @@ namespace RentaWEB2._0.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Funcionario funcionario = db.Funcionario.Find(id);
+            Funcionario funcionario = db.Funcionarios.Find(id);
             if (funcionario == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.Id_Funcionario = new SelectList(db.Causantes, "NUM_CORRELATIVO", "RUT_CAUSANTE", funcionario.Id_Funcionario);
             return View(funcionario);
         }
 
@@ -86,6 +90,7 @@ namespace RentaWEB2._0.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.Id_Funcionario = new SelectList(db.Causantes, "NUM_CORRELATIVO", "RUT_CAUSANTE", funcionario.Id_Funcionario);
             return View(funcionario);
         }
 
@@ -96,7 +101,7 @@ namespace RentaWEB2._0.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Funcionario funcionario = db.Funcionario.Find(id);
+            Funcionario funcionario = db.Funcionarios.Find(id);
             if (funcionario == null)
             {
                 return HttpNotFound();
@@ -109,8 +114,8 @@ namespace RentaWEB2._0.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(short id)
         {
-            Funcionario funcionario = db.Funcionario.Find(id);
-            db.Funcionario.Remove(funcionario);
+            Funcionario funcionario = db.Funcionarios.Find(id);
+            db.Funcionarios.Remove(funcionario);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -132,226 +137,49 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Proceso(String id)
         {
-           List<Funcionario> funcionarios = new List<Funcionario>();
-            /*  List<Funcionario> Funcionarios = new List<Funcionario>();
-
-             foreach (var item in db.Funcionario)
-             {
-                 Funcionario funcionario = new Funcionario();
-                 funcionario.Id_Funcionario = item.Id_Funcionario;
-                 funcionario.Activo = item.Activo;
-                 funcionario.Rut = item.Rut;
-                 funcionario.Nombres = item.Nombres;
-                 funcionario.Apellidos = item.Apellidos;
-                 funcionario.RentaPromedio = item.RentaPromedio;
-                 funcionario.Sexo = item.Sexo;
-                 funcionario.EstadoCivil = item.EstadoCivil;
-                 funcionario.Fec_nacimiento = item.Fec_nacimiento;
-                 funcionario.Direccion = item.Direccion;
-
-
-
-
-                 Funcionarios.Add(funcionario);
-             }
-
-             if (Funcionarios == null)
-             {
-
-
-                 foreach (var item in db.Causante)
-                 {
-                 String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
-                 String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
-                 short id_Funcionario = (short) item.NUM_CORRELATIVO;
-                 String Rut = item.RUT_CAUSANTE;
-                 int Renta = (int) item.PROMEDIO_RENTA;
-                 short Activo=0; 
-
-
-                 if (item.NOMBRE_CAUSANTE.Substring(0,16).Equals("CARTER DE LA PAZ"))
-                 {
-
-
-
-                     apellido2 = subs[0];
-
-                     subapellido3 = subs[1];
-
-                     subapellido2 = subs[2];
-
-                     subapellido1 = subs[3];
-
-
-                     nombre2 = subs[4];
-
-                     nombre1 = subs[5];
-
-
-
-                     apellido1 = subapellido3 + " " + subapellido2 + " " + subapellido1 ;
-                     apellidos = apellido1 + " " + apellido2;
-                     nombres = nombre1 + " " + nombre2;
-
-
-                 }
-                 else if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("GONZALEZ ACEVEDO"))
-                 {
-
-
-
-                     apellido2 = subs[0];
-
-
-                     apellido1 = subs[1];
-
-
-                     nombre1 = subs[2];
-
-
-
-
-
-
-                     apellidos = apellido1 + " " + apellido2;
-                     nombres = nombre1;
-
-
-                 }
-
-                 else
-                 {
-
-
-                     apellido2 = subs[0];
-
-
-                     apellido1 = subs[1];
-
-
-                     nombre2 = subs[2];
-
-
-                     nombre1 = subs[3];
-
-
-
-
-
-
-                     apellidos = apellido1 + " " + apellido2;
-                     nombres = nombre1 + " " + nombre2;
-
-                 }
-                 Funcionario funcionario = new Funcionario();
-                 funcionario.Id_Funcionario = id_Funcionario;
-                 funcionario.Rut = Rut;
-                 funcionario.Nombres = nombres;
-                 funcionario.Apellidos = apellidos;
-                 funcionario.RentaPromedio = Renta;
-                 funcionario.Activo = Activo;
-                     funcionario.Sexo = 0;
-                     funcionario.EstadoCivil = 0;
-                     funcionario.Fec_nacimiento = null;
-                     funcionario.Direccion = "Null";
-
-                     funcionarios.Add(funcionario);
-
-
-                 }
-                  db.Funcionario.AddRange(funcionarios);
-                  db.SaveChanges();
-
-                 return Redirect("../Causantes/Descargar");
-
-             }
-             else
-             {
-
-                 return Redirect("../Causantes/Descargar");
-             }*/
-
-            foreach (var item in db.Causante)
+            List<Funcionario> funcionarios = new List<Funcionario>();
+            foreach (var item in db.Causantes)
             {
+                
                 String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
                 String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
                 short id_Funcionario = (short)item.NUM_CORRELATIVO;
                 String Rut = item.RUT_CAUSANTE;
                 int Renta = (int)item.PROMEDIO_RENTA;
-                short Activo = 0;
+                short Activo = 1;
 
 
                 if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("CARTER DE LA PAZ"))
                 {
 
-
-
-                    apellido2 = subs[0];
-
-                    subapellido3 = subs[1];
-
-                    subapellido2 = subs[2];
-
-                    subapellido1 = subs[3];
-
-
-                    nombre2 = subs[4];
-
-                    nombre1 = subs[5];
-
-
-
                     apellido1 = subapellido3 + " " + subapellido2 + " " + subapellido1;
+                    apellido2 = subs[0];
                     apellidos = apellido1 + " " + apellido2;
+                    nombre1 = subs[5];
+                    nombre2 = subs[4];
                     nombres = nombre1 + " " + nombre2;
-
+                    subapellido1 = subs[3];
+                    subapellido2 = subs[2];
+                    subapellido3 = subs[1];
 
                 }
                 else if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("GONZALEZ ACEVEDO"))
                 {
-
-
-
-                    apellido2 = subs[0];
-
-
                     apellido1 = subs[1];
-
-
-                    nombre1 = subs[2];
-
-
-
-
-
-
+                    apellido2 = subs[0];
                     apellidos = apellido1 + " " + apellido2;
+                    nombre1 = subs[2];
                     nombres = nombre1;
-
 
                 }
 
                 else
                 {
-
-
-                    apellido2 = subs[0];
-
-
                     apellido1 = subs[1];
-
-
-                    nombre2 = subs[2];
-
-
-                    nombre1 = subs[3];
-
-
-
-
-
-
+                    apellido2 = subs[0];
                     apellidos = apellido1 + " " + apellido2;
+                    nombre1 = subs[3];
+                    nombre2 = subs[2];
                     nombres = nombre1 + " " + nombre2;
 
                 }
@@ -366,20 +194,33 @@ namespace RentaWEB2._0.Controllers
                 funcionario.EstadoCivil = 0;
                 funcionario.Fec_nacimiento = null;
                 funcionario.Direccion = "Null";
+                foreach (var items in db.Funcionarios)
+                {
+                    Funcionario funcionario1 = new Funcionario();
+                    if (items.Id_Funcionario==id_Funcionario && items.Rut.Equals(Rut))
+                    {
+                        
+                        funcionario1.Activo = 1;
 
-                funcionarios.Add(funcionario);
+                    }
+                    else
+                    {
+                        funcionario1.Activo = 0;
+                        
+                    }
+                }
+
+                
+               
 
 
             }
-            db.Funcionario.AddRange(funcionarios);
+            db.Funcionarios.AddRange(funcionarios);
             db.SaveChanges();
 
             return Redirect("../Causantes/Descargar");
-            
+
         }
 
-
-
     }
-
-    }
+}

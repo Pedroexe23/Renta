@@ -1,10 +1,7 @@
-﻿using RentaWEB2._0.Models;
-using RentaWEB2._0.Models.Dao;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,138 +10,30 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Pruebas.Models.Tecnologia;
+using Pruebas.Models.Tecnologia.DAO;
 
-
-namespace RentaWEB2._0.Controllers
+namespace Pruebas.Controllers.Tecnologia
 {
     public class CausantesController : Controller
     {
         private Municipalidad db = new Municipalidad();
-        private SqlConnection conexion = new SqlConnection("data source=TECNO-PRACTI;initial catalog=Municipalidad;integrated security=True;");
-        
 
         // GET: Causantes
         public ActionResult Index()
         {
-
-            return View();
-        }
-        [HttpPost]
-        public ActionResult Index(string Actualizar, Causante causante)
-        {
-            
-            List<Causante> causantes = new List<Causante>();
-            int tramo = 0;
-            int monto = 0;
-            int Renta = 0;
-            int[] tramos = new int [9] ;
-            int[] montos= new int [9] ;
-
-          
-
-            foreach (var item in db.Causante)
-            {
-                causante.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
-                causante.RUT_CAUSANTE = item.RUT_CAUSANTE;
-                causante.NOMBRE_CAUSANTE = item.NOMBRE_CAUSANTE;
-                causante.CODIGO_TIPO_CAUSANTE = item.CODIGO_TIPO_CAUSANTE;
-                causante.TIPO_CAUSANTE = item.TIPO_CAUSANTE;
-                causante.RUT_BENEFICIARIO = item.RUT_BENEFICIARIO;
-                causante.NOMBRE_BENEFICIARIO = item.NOMBRE_BENEFICIARIO;
-                causante.CODIGO_TIPO_BENEFICIARIO = item.CODIGO_TIPO_BENEFICIARIO;
-                causante.TIPO_BENEFICIARIO = item.TIPO_BENEFICIARIO;
-                causante.CODIGO_TIPO_BENEFICIO = item.CODIGO_TIPO_BENEFICIO;
-                causante.TIPO_BENEFICIO = item.TIPO_BENEFICIO;
-                causante.RUT_EMPLEADOR = item.RUT_EMPLEADOR;
-                causante.NOMBRE_EMPLEADOR = item.NOMBRE_EMPLEADOR;
-                causante.FECHA_RECONOCIMIENTO = item.FECHA_RECONOCIMIENTO;
-                causante.TRAMO = item.TRAMO;
-                causante.CODIGO_ESTADO_TUPLA = item.CODIGO_ESTADO_TUPLA;
-                causante.GLOSA_ESTADO_TUPLA = item.GLOSA_ESTADO_TUPLA;
-                Renta =  item.PROMEDIO_RENTA;
-                causante.RUT_CAUSANTE = item.RUT_CAUSANTE;
-                tramo =  item.TRAMO;
-                monto = item.MONTO_BENEFICIO;
-              
-                    if (Renta<=342246)
-                    {
-                        foreach (var list in db.Asignacion_Familiar)
-                        {
-                        if (list.Tramo==1)
-                        {
-                            tramo = (int)list.Tramo;
-                            monto = (int) list.Monto;
-                        }
-
-                        }
-
-                     }
-                    else if (Renta > 342246 && Renta <=500033)
-                    {
-                        foreach (var list in db.Asignacion_Familiar)
-                        {
-                        if (list.Tramo == 2)
-                        {
-                            tramo = (int)list.Tramo;
-                            monto = (int)list.Monto;
-                        }
-                    }
-
-                    }
-                    else if (Renta > 500033 && Renta <= 779882 )
-                    {
-                       foreach (var list in db.Asignacion_Familiar)
-                        {
-                        if (list.Tramo == 3)
-                        {
-                            tramo = (int)list.Tramo;
-                            monto = (int)list.Monto;
-                        }
-                    }
-                    }
-                    else
-                    {
-                        foreach (var list in db.Asignacion_Familiar)
-                         {
-                        if (list.Tramo == 4)
-                        {
-                            tramo = (int)list.Tramo;
-                            monto = (int)list.Monto;
-                        }
-                    }
-
-                }
-                    
-
-                    
-
-
-                
-                
-
-
-                conexion.Close();
-                conexion.Open();
-                String Cadena = "update Causante set MONTO_BENEFICIO = " + monto + ", TRAMO=" + tramo+" where NUM_CORRELATIVO =" + causante.NUM_CORRELATIVO + "";
-
-
-                SqlCommand command = new SqlCommand(Cadena, conexion);
-                int cant;
-                cant = command.ExecuteNonQuery();
-                conexion.Close();
-            }
-
-            return Redirect("Index");
+            var causantes = db.Causantes.Include(c => c.Asignacion_Familiar).Include(c => c.Funcionario);
+            return View(causantes.ToList());
         }
 
         // GET: Causantes/Details/5
-        public ActionResult Details(byte? id)
+        public ActionResult Details(short? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Causante causante = db.Causante.Find(id);
+            Causante causante = db.Causantes.Find(id);
             if (causante == null)
             {
                 return HttpNotFound();
@@ -155,6 +44,8 @@ namespace RentaWEB2._0.Controllers
         // GET: Causantes/Create
         public ActionResult Create()
         {
+            ViewBag.TRAMO = new SelectList(db.Asignacion_Familiar, "Tramo", "Requisito_De_Sistema");
+            ViewBag.NUM_CORRELATIVO = new SelectList(db.Funcionarios, "Id_Funcionario", "Rut");
             return View();
         }
 
@@ -167,26 +58,30 @@ namespace RentaWEB2._0.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Causante.Add(causante);
+                db.Causantes.Add(causante);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
+            ViewBag.TRAMO = new SelectList(db.Asignacion_Familiar, "Tramo", "Requisito_De_Sistema", causante.TRAMO);
+            ViewBag.NUM_CORRELATIVO = new SelectList(db.Funcionarios, "Id_Funcionario", "Rut", causante.NUM_CORRELATIVO);
             return View(causante);
         }
 
         // GET: Causantes/Edit/5
-        public ActionResult Edit(byte? id)
+        public ActionResult Edit(short? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Causante causante = db.Causante.Find(id);
+            Causante causante = db.Causantes.Find(id);
             if (causante == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.TRAMO = new SelectList(db.Asignacion_Familiar, "Tramo", "Requisito_De_Sistema", causante.TRAMO);
+            ViewBag.NUM_CORRELATIVO = new SelectList(db.Funcionarios, "Id_Funcionario", "Rut", causante.NUM_CORRELATIVO);
             return View(causante);
         }
 
@@ -203,17 +98,19 @@ namespace RentaWEB2._0.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.TRAMO = new SelectList(db.Asignacion_Familiar, "Tramo", "Requisito_De_Sistema", causante.TRAMO);
+            ViewBag.NUM_CORRELATIVO = new SelectList(db.Funcionarios, "Id_Funcionario", "Rut", causante.NUM_CORRELATIVO);
             return View(causante);
         }
 
         // GET: Causantes/Delete/5
-        public ActionResult Delete(byte? id)
+        public ActionResult Delete(short? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Causante causante = db.Causante.Find(id);
+            Causante causante = db.Causantes.Find(id);
             if (causante == null)
             {
                 return HttpNotFound();
@@ -224,10 +121,10 @@ namespace RentaWEB2._0.Controllers
         // POST: Causantes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(byte id)
+        public ActionResult DeleteConfirmed(short id)
         {
-            Causante causante = db.Causante.Find(id);
-            db.Causante.Remove(causante);
+            Causante causante = db.Causantes.Find(id);
+            db.Causantes.Remove(causante);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -240,27 +137,7 @@ namespace RentaWEB2._0.Controllers
             }
             base.Dispose(disposing);
         }
-        public ActionResult Inicio()
-        {
 
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Inicio(FormCollection formCollection)
-        {
-
-            Usuario usuario = new Usuario();
-            String User = formCollection["nombre-txt"];
-            String Contrasena = formCollection["contrasena-txt"];
-            if (User.Equals(usuario.Username) && Contrasena.Equals(usuario.Password))
-            {
-                return RedirectToAction("Index");
-            }
-            return View();
-
-        }
         [HttpGet]
         public ActionResult Insertar()
         {
@@ -271,7 +148,7 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Insertar(HttpPostedFileBase Files)
         {
-           CausantesDAO causanteDAO = new CausantesDAO();
+            CausantesDAO causanteDAO = new CausantesDAO();
             List<Causante> causa = new List<Causante>();
             DocumentoDAO documentoDAO = new DocumentoDAO();
             if (Files == null || Files.ContentLength == 0)
@@ -392,8 +269,8 @@ namespace RentaWEB2._0.Controllers
                                 causantes.CODIGO_ESTADO_TUPLA = Codigo_estado_Tupla;
                                 causantes.GLOSA_ESTADO_TUPLA = values[17];
                                 causantes.PROMEDIO_RENTA = Promedio_Renta;
-                               // causanteDAO.Crear(causantes);
-                                causa.Add(causantes);
+                                causanteDAO.Crear(causantes);
+                               
                                 count = count + 1;
 
 
@@ -404,48 +281,43 @@ namespace RentaWEB2._0.Controllers
                         }
 
                     }
-                  /*  byte[] files = null;
-                    Stream stream = Files.InputStream;
-                    using (MemoryStream MS= new MemoryStream())
-                    {
-                        stream.CopyTo(MS);
-                        files = MS.ToArray();
+                     byte[] files = null;
+                      Stream stream = Files.InputStream;
+                      using (MemoryStream MS= new MemoryStream())
+                      {
+                          stream.CopyTo(MS);
+                          files = MS.ToArray();
 
 
-                    }
-                    String Fechas = DateTime.Now.Date.ToString("dd-MM-yyyy");
-                    Documento doc = new Documento();
-                    int id = 1;
-                    doc.id_Documento = id;
-                    doc.Nombre = Files.FileName.Trim();
-                    doc.documento1 = files;
-                    doc.NombreReal = fileName;
-                    doc.Fecha = DateTime.Parse(Fechas);
-                    documentoDAO.Crear(doc);
-                  */
+                      }
+                      String Fechas = DateTime.Now.Date.ToString("dd-MM-yyyy");
+                      Documento doc = new Documento();
+                      int id = 1;
+                      doc.id_Documento = id;
+                      doc.Nombre = Files.FileName.Trim();
+                      doc.documento1 = files;
+                      doc.NombreReal = fileName;
+                      doc.Fecha = DateTime.Parse(Fechas);
+                      documentoDAO.Crear(doc);
                     
+                    ViewBag.Message = "Archivo Subiendo";
+                    return Redirect("Proceso_de_guardado");
+               
 
-
-                   db.Causante.AddRange(causa);
-                     db.SaveChanges();
-                    ViewBag.Message = "Archivo Subido";
-                    // return Redirect("Proceso_de_guardado");
-                    return Redirect("../Funcionarios/Proceso");
-                    
 
                 }
-                catch (Exception ex )
+                catch (Exception ex)
                 {
                     ViewBag.Message = "Archivo erroneo";
                     ViewBag.Message = ex;
-                     return View();
+                    return View();
 
                 }
 
 
             }
 
-             
+
 
 
 
@@ -456,44 +328,18 @@ namespace RentaWEB2._0.Controllers
         {
             CausantesDAO causanteDAO = new CausantesDAO();
             List<Causante> causantesguardados = causanteDAO.GetCausantes();
-            DocumentoDAO documentoDAO = new DocumentoDAO();
-            List<Causante> Causantes =  new List<Causante>();
-            
-             foreach (var item in db.Causante)
-                {
-                    Causante causantes = new Causante();
-                    causantes.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
-                    causantes.RUT_CAUSANTE = item.RUT_CAUSANTE;
-                    causantes.NOMBRE_CAUSANTE = item.NOMBRE_CAUSANTE;
-                    causantes.CODIGO_TIPO_CAUSANTE = item.CODIGO_TIPO_CAUSANTE;
-                    causantes.TIPO_CAUSANTE = item.TIPO_CAUSANTE;
-                    causantes.RUT_BENEFICIARIO = item.RUT_BENEFICIARIO;
-                    causantes.NOMBRE_BENEFICIARIO = item.NOMBRE_BENEFICIARIO;
-                    causantes.CODIGO_TIPO_BENEFICIARIO = item.CODIGO_TIPO_BENEFICIARIO;
-                    causantes.TIPO_BENEFICIARIO = item.TIPO_BENEFICIARIO;
-                    causantes.CODIGO_TIPO_BENEFICIO = item.CODIGO_TIPO_BENEFICIO;
-                    causantes.TIPO_BENEFICIO = item.TIPO_BENEFICIO;
-                    causantes.RUT_EMPLEADOR = item.RUT_EMPLEADOR;
-                    causantes.NOMBRE_EMPLEADOR = item.NOMBRE_EMPLEADOR;
-                    causantes.FECHA_RECONOCIMIENTO = item.FECHA_RECONOCIMIENTO;
-                    causantes.TRAMO = item.TRAMO;
-                    causantes.MONTO_BENEFICIO = item.MONTO_BENEFICIO;
-                    causantes.CODIGO_ESTADO_TUPLA = item.CODIGO_ESTADO_TUPLA;
-                    causantes.GLOSA_ESTADO_TUPLA = item.GLOSA_ESTADO_TUPLA;
-                    causantes.PROMEDIO_RENTA = item.PROMEDIO_RENTA;
-                    Causantes.Add(causantes);
-                }
-           
+   
+            return View(causantesguardados.OrderBy(Y => Y.NUM_CORRELATIVO).ToList());
 
 
-           return View(causantesguardados.Except(Causantes.OrderBy(A => A.NUM_CORRELATIVO)).OrderBy(Y => Y.NUM_CORRELATIVO).ToList());
-            
-           
         }
 
         [HttpPost]
         public ActionResult Proceso_de_guardado(String id)
         {
+            CausantesDAO causanteDAO = new CausantesDAO();
+            List<Causante> causantesguardados = causanteDAO.GetCausantes();
+
 
 
             return Redirect("../Funcionarios/Proceso");
@@ -503,19 +349,10 @@ namespace RentaWEB2._0.Controllers
 
 
 
-
-
-
-
-
-
-
-
-
         public ActionResult Descargar()
         {
 
-            return View(db.Causante.OrderBy(Y=> Y.NUM_CORRELATIVO).ToList());
+            return View(db.Causantes.OrderBy(Y => Y.NUM_CORRELATIVO).ToList());
         }
 
 
@@ -524,9 +361,9 @@ namespace RentaWEB2._0.Controllers
         {
 
             var gv = new GridView();
-           
-         
-            gv.DataSource = db.Causante.OrderBy(x => x.NUM_CORRELATIVO).ToList();
+
+
+            gv.DataSource = db.Causantes.OrderBy(x => x.NUM_CORRELATIVO).ToList();
             gv.DataBind();
 
             Response.ClearContent();
@@ -537,14 +374,24 @@ namespace RentaWEB2._0.Controllers
             StringWriter sb = new StringWriter();
             HtmlTextWriter htmlTw = new HtmlTextWriter(sb);
             gv.RenderControl(htmlTw);
-           
+
             Response.Write(sb.ToString());
             Response.End();
         }
 
 
-      
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 }
-

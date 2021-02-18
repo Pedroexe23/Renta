@@ -1,4 +1,4 @@
-namespace RentaWEB2._0.Models
+namespace Pruebas.Models.Tecnologia
 {
     using System;
     using System.Collections.Generic;
@@ -47,7 +47,7 @@ namespace RentaWEB2._0.Models
         public string NOMBRE_EMPLEADOR { get; set; }
 
         [Column(TypeName = "date")]
-        public DateTime FECHA_RECONOCIMIENTO { get; set; }
+        public DateTime? FECHA_RECONOCIMIENTO { get; set; }
 
         public short TRAMO { get; set; }
 
@@ -59,5 +59,9 @@ namespace RentaWEB2._0.Models
         public string GLOSA_ESTADO_TUPLA { get; set; }
 
         public int PROMEDIO_RENTA { get; set; }
+
+        public virtual Asignacion_Familiar Asignacion_Familiar { get; set; }
+
+        public virtual Funcionario Funcionario { get; set; }
     }
 }
