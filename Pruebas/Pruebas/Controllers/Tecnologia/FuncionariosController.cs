@@ -144,68 +144,70 @@ namespace Pruebas.Controllers.Tecnologia
             List<Funcionario> funcionarios = new List<Funcionario>();
             foreach (var items in db.Funcionarios)
             {
+                int counts = 0;
                 int count = 0;
                 Funcionario funcionario1 = new Funcionario();
                 funcionario1.Id_Funcionario = items.Id_Funcionario;
 
                 foreach (var item in listaCausante)
-            {
-                
-                String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
-                String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
-                short id_Funcionario = (short)item.NUM_CORRELATIVO;
-                String Rut = item.RUT_CAUSANTE;
-                int Renta = (int)item.PROMEDIO_RENTA;
-                short Activo = 1;
-
-
-                if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("CARTER DE LA PAZ"))
                 {
 
-                    apellido1 = subapellido3 + " " + subapellido2 + " " + subapellido1;
-                    apellido2 = subs[0];
-                    apellidos = apellido1 + " " + apellido2;
-                    nombre1 = subs[5];
-                    nombre2 = subs[4];
-                    nombres = nombre1 + " " + nombre2;
-                    subapellido1 = subs[3];
-                    subapellido2 = subs[2];
-                    subapellido3 = subs[1];
+                    String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
+                    String[] subs = item.NOMBRE_CAUSANTE.Split(' ');
+                    short id_Funcionario = (short)item.NUM_CORRELATIVO;
+                    String Rut = item.RUT_CAUSANTE;
+                    int Renta = (int)item.PROMEDIO_RENTA;
+                    short Activo = 1;
 
-                }
-                else if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("GONZALEZ ACEVEDO"))
-                {
-                    apellido1 = subs[1];
-                    apellido2 = subs[0];
-                    apellidos = apellido1 + " " + apellido2;
-                    nombre1 = subs[2];
-                    nombres = nombre1;
 
-                }
+                    if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("CARTER DE LA PAZ"))
+                    {
 
-                else
-                {
-                    apellido1 = subs[1];
-                    apellido2 = subs[0];
-                    apellidos = apellido1 + " " + apellido2;
-                    nombre1 = subs[3];
-                    nombre2 = subs[2];
-                    nombres = nombre1 + " " + nombre2;
+                        apellido1 = subapellido3 + " " + subapellido2 + " " + subapellido1;
+                        apellido2 = subs[0];
+                        apellidos = apellido1 + " " + apellido2;
+                        nombre1 = subs[5];
+                        nombre2 = subs[4];
+                        nombres = nombre1 + " " + nombre2;
+                        subapellido1 = subs[3];
+                        subapellido2 = subs[2];
+                        subapellido3 = subs[1];
 
-                }
-                Funcionario funcionario = new Funcionario();
-                funcionario.Id_Funcionario = id_Funcionario;
-                funcionario.Rut = Rut;
-                funcionario.Nombres = nombres;
-                funcionario.Apellidos = apellidos;
-                funcionario.RentaPromedio = Renta;
-                funcionario.Activo = Activo;
-                funcionario.Sexo = 0;
-                funcionario.EstadoCivil = 0;
-                funcionario.Fec_nacimiento = null;
-                funcionario.Direccion = "Null";
+                    }
+                    else if (item.NOMBRE_CAUSANTE.Substring(0, 16).Equals("GONZALEZ ACEVEDO"))
+                    {
+                        apellido1 = subs[1];
+                        apellido2 = subs[0];
+                        apellidos = apellido1 + " " + apellido2;
+                        nombre1 = subs[2];
+                        nombres = nombre1;
+
+                    }
+
+                    else
+                    {
+                        apellido1 = subs[1];
+                        apellido2 = subs[0];
+                        apellidos = apellido1 + " " + apellido2;
+                        nombre1 = subs[3];
+                        nombre2 = subs[2];
+                        nombres = nombre1 + " " + nombre2;
+
+                    }
+                    Funcionario funcionario = new Funcionario();
+                    funcionario.Id_Funcionario = id_Funcionario;
+                    funcionario.Rut = Rut;
+                    funcionario.Nombres = nombres;
+                    funcionario.Apellidos = apellidos;
+                    funcionario.RentaPromedio = Renta;
+                    funcionario.Activo = Activo;
+                    funcionario.Sexo = 0;
+                    funcionario.EstadoCivil = 0;
+                    funcionario.Fec_nacimiento = null;
+                    funcionario.Direccion = "Null";
                     if (items.Id_Funcionario == id_Funcionario && items.Rut.Equals(Rut))
                     {
+                        counts = 1;
                         funcionario1.Activo = 1;
                         conexion.Close();
                         conexion.Open();
@@ -236,7 +238,14 @@ namespace Pruebas.Controllers.Tecnologia
 
                     }
 
+                    if (counts == 0)
+                    {
+                        db.Funcionarios.Add(funcionario);
+                        db.SaveChanges();
+                    }
+
                 }
+               
             }
             // db.Funcionarios.AddRange(funcionarios);
             // db.SaveChanges();
