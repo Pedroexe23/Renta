@@ -243,11 +243,13 @@
     <Content Include="Views\Funcionarios\Details.cshtml" />
     <Content Include="Views\Funcionarios\Edit.cshtml" />
     <Content Include="Views\Funcionarios\Index.cshtml" />
+    <Content Include="Views\Funcionarios\Proceso.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Casa\" />
     <Folder Include="Models\Casa\" />
+    <Folder Include="Views\Causantes\Descargas\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

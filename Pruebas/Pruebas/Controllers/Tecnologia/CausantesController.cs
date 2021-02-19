@@ -222,9 +222,6 @@ namespace Pruebas.Controllers.Tecnologia
                                 string utf8_String = values[2];
                                 byte[] bytes = Encoding.Default.GetBytes(utf8_String);
 
-
-
-
                                 short Num_Correlativo = Convert.ToInt16(values[0]);
                                 int Codigo_tipo_causante = Int32.Parse(values[3]);
                                 int Codigo_tipo_beneficiario = Int32.Parse(values[7]);
@@ -339,9 +336,55 @@ namespace Pruebas.Controllers.Tecnologia
         {
             CausantesDAO causanteDAO = new CausantesDAO();
             List<Causante> causantesguardados = causanteDAO.GetCausantes();
+            List<Causante> Repetidos = new List<Causante>();
+            List<Causante> guardados = new List<Causante>();   
+            foreach (var items in causantesguardados)
+            {
+                int count = 0;
+                Causante c = new Causante();
+                c.NUM_CORRELATIVO = items.NUM_CORRELATIVO;
+                c.RUT_CAUSANTE = items.RUT_CAUSANTE;
+                c.NOMBRE_CAUSANTE = items.NOMBRE_CAUSANTE;
+                c.CODIGO_TIPO_CAUSANTE = items.CODIGO_TIPO_CAUSANTE;
+                c.TIPO_CAUSANTE = items.TIPO_CAUSANTE;
+                c.RUT_BENEFICIARIO = items.RUT_BENEFICIARIO;
+                c.NOMBRE_BENEFICIARIO = items.NOMBRE_BENEFICIARIO;
+                c.CODIGO_TIPO_BENEFICIARIO = items.CODIGO_TIPO_BENEFICIARIO;
+                c.TIPO_BENEFICIARIO = items.TIPO_BENEFICIARIO;
+                c.CODIGO_TIPO_BENEFICIO = items.CODIGO_TIPO_BENEFICIO;
+                c.TIPO_BENEFICIO = items.TIPO_BENEFICIO;
+                c.RUT_EMPLEADOR = items.RUT_EMPLEADOR;
+                c.NOMBRE_EMPLEADOR = items.NOMBRE_EMPLEADOR;
+                c.FECHA_RECONOCIMIENTO = items.FECHA_RECONOCIMIENTO;
+                c.TRAMO = items.TRAMO;
+                c.MONTO_BENEFICIO = items.MONTO_BENEFICIO;
+                c.CODIGO_ESTADO_TUPLA = items.CODIGO_ESTADO_TUPLA;
+                c.GLOSA_ESTADO_TUPLA = items.GLOSA_ESTADO_TUPLA;
+                c.PROMEDIO_RENTA = items.PROMEDIO_RENTA;
+                foreach (var item in db.Causantes)
+                {
+                    count = 0;
+                    Causante ca = new Causante();
+                    ca.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
+                    ca.RUT_CAUSANTE = item.RUT_CAUSANTE;
+                    if (c.NUM_CORRELATIVO==ca.NUM_CORRELATIVO && c.RUT_CAUSANTE.Equals(ca.RUT_CAUSANTE))
+                    {
+                        Repetidos.Add(c);
+                        count = count + 1;
+                        break;
+                    }
+                
 
+                }
+                if (count ==0)
+                {
+                    db.Causantes.Add(c);
+                    db.SaveChanges();
 
+                }
 
+            }
+            
             return Redirect("../Funcionarios/Proceso");
 
 

@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Pruebas.Models.Tecnologia;
+using Pruebas.Models.Tecnologia.DAO;
 
 namespace Pruebas.Controllers.Tecnologia
 {
     public class FuncionariosController : Controller
     {
+        static CausantesDAO causanteDAO = new CausantesDAO();
         private Municipalidad db = new Municipalidad();
-
+        private SqlConnection conexion = new SqlConnection("data source=TECNO-PRACTI;initial catalog=Municipalidad;integrated security=True;");
         // GET: Funcionarios
         public ActionResult Index()
         {
@@ -137,8 +140,15 @@ namespace Pruebas.Controllers.Tecnologia
         [HttpPost]
         public ActionResult Proceso(String id)
         {
+            List<Causante> listaCausante =causanteDAO.GetCausantes() ;
             List<Funcionario> funcionarios = new List<Funcionario>();
-            foreach (var item in db.Causantes)
+            foreach (var items in db.Funcionarios)
+            {
+                int count = 0;
+                Funcionario funcionario1 = new Funcionario();
+                funcionario1.Id_Funcionario = items.Id_Funcionario;
+
+                foreach (var item in listaCausante)
             {
                 
                 String nombres = " ", apellidos = " ", nombre1 = " ", nombre2 = " ", apellido1 = " ", apellido2 = " ", subapellido1 = " ", subapellido2 = " ", subapellido3 = " ";
@@ -194,34 +204,42 @@ namespace Pruebas.Controllers.Tecnologia
                 funcionario.EstadoCivil = 0;
                 funcionario.Fec_nacimiento = null;
                 funcionario.Direccion = "Null";
-                foreach (var items in db.Funcionarios)
-                {
-                    int count = 0;
-                    Funcionario funcionario1 = new Funcionario();
-                    if (items.Id_Funcionario==id_Funcionario && items.Rut.Equals(Rut))
+                    if (items.Id_Funcionario == id_Funcionario && items.Rut.Equals(Rut))
                     {
-                        
                         funcionario1.Activo = 1;
+                        conexion.Close();
+                        conexion.Open();
+                        String Cadena = "update Funcionario set Activo =" + funcionario1.Activo + "where Id_Funcionario =" + funcionario1.Id_Funcionario + "";
+                        SqlCommand command = new SqlCommand(Cadena, conexion);
+                        int cant;
+                        cant = command.ExecuteNonQuery();
+                        conexion.Close();
+                        break;
 
                     }
                     else
                     {
-                        funcionario1.Activo = 0;
-                        count=1+count;
+
+                        count = 1 + count;
                     }
-                    if ()
+                    if (count > 0)
                     {
 
+                        funcionario1.Activo = 0;
+                        conexion.Close();
+                        conexion.Open();
+                        String Cadena = "update Funcionario set Activo =" + funcionario1.Activo + "where Id_Funcionario =" + funcionario1.Id_Funcionario + "";
+                        SqlCommand command = new SqlCommand(Cadena, conexion);
+                        int cant;
+                        cant = command.ExecuteNonQuery();
+                        conexion.Close();
+
                     }
+
                 }
-
-                
-               
-
-
             }
-            db.Funcionarios.AddRange(funcionarios);
-            db.SaveChanges();
+            // db.Funcionarios.AddRange(funcionarios);
+            // db.SaveChanges();
 
             return Redirect("../Causantes/Descargar");
 
