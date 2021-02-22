@@ -21,7 +21,7 @@ namespace RentaWEB2._0.Controllers
     {
         private Municipalidad db = new Municipalidad();
         private SqlConnection conexion = new SqlConnection("data source=TECNO-PRACTI;initial catalog=Municipalidad;integrated security=True;");
-        
+
 
         // GET: Causantes
         public ActionResult Index()
@@ -32,15 +32,15 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Index(string Actualizar, Causante causante)
         {
-            
+
             List<Causante> causantes = new List<Causante>();
             int tramo = 0;
             int monto = 0;
             int Renta = 0;
-            int[] tramos = new int [9] ;
-            int[] montos= new int [9] ;
+            int[] tramos = new int[9];
+            int[] montos = new int[9];
 
-          
+
 
             foreach (var item in db.Causante)
             {
@@ -61,28 +61,28 @@ namespace RentaWEB2._0.Controllers
                 causante.TRAMO = item.TRAMO;
                 causante.CODIGO_ESTADO_TUPLA = item.CODIGO_ESTADO_TUPLA;
                 causante.GLOSA_ESTADO_TUPLA = item.GLOSA_ESTADO_TUPLA;
-                Renta =  item.PROMEDIO_RENTA;
+                Renta = item.PROMEDIO_RENTA;
                 causante.RUT_CAUSANTE = item.RUT_CAUSANTE;
-                tramo =  item.TRAMO;
+                tramo = item.TRAMO;
                 monto = item.MONTO_BENEFICIO;
-              
-                    if (Renta<=342246)
+
+                if (Renta <= 342246)
+                {
+                    foreach (var list in db.Asignacion_Familiar)
                     {
-                        foreach (var list in db.Asignacion_Familiar)
-                        {
-                        if (list.Tramo==1)
+                        if (list.Tramo == 1)
                         {
                             tramo = (int)list.Tramo;
-                            monto = (int) list.Monto;
+                            monto = (int)list.Monto;
                         }
 
-                        }
+                    }
 
-                     }
-                    else if (Renta > 342246 && Renta <=500033)
+                }
+                else if (Renta > 342246 && Renta <= 500033)
+                {
+                    foreach (var list in db.Asignacion_Familiar)
                     {
-                        foreach (var list in db.Asignacion_Familiar)
-                        {
                         if (list.Tramo == 2)
                         {
                             tramo = (int)list.Tramo;
@@ -90,22 +90,22 @@ namespace RentaWEB2._0.Controllers
                         }
                     }
 
-                    }
-                    else if (Renta > 500033 && Renta <= 779882 )
+                }
+                else if (Renta > 500033 && Renta <= 779882)
+                {
+                    foreach (var list in db.Asignacion_Familiar)
                     {
-                       foreach (var list in db.Asignacion_Familiar)
-                        {
                         if (list.Tramo == 3)
                         {
                             tramo = (int)list.Tramo;
                             monto = (int)list.Monto;
                         }
                     }
-                    }
-                    else
+                }
+                else
+                {
+                    foreach (var list in db.Asignacion_Familiar)
                     {
-                        foreach (var list in db.Asignacion_Familiar)
-                         {
                         if (list.Tramo == 4)
                         {
                             tramo = (int)list.Tramo;
@@ -114,18 +114,11 @@ namespace RentaWEB2._0.Controllers
                     }
 
                 }
-                    
-
-                    
-
-
-                
-                
 
 
                 conexion.Close();
                 conexion.Open();
-                String Cadena = "update Causante set MONTO_BENEFICIO = " + monto + ", TRAMO=" + tramo+" where NUM_CORRELATIVO =" + causante.NUM_CORRELATIVO + "";
+                String Cadena = "update Causante set MONTO_BENEFICIO = " + monto + ", TRAMO=" + tramo + " where NUM_CORRELATIVO =" + causante.NUM_CORRELATIVO + "";
 
 
                 SqlCommand command = new SqlCommand(Cadena, conexion);
@@ -271,7 +264,7 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Insertar(HttpPostedFileBase Files)
         {
-           CausantesDAO causanteDAO = new CausantesDAO();
+            CausantesDAO causanteDAO = new CausantesDAO();
             List<Causante> causa = new List<Causante>();
             DocumentoDAO documentoDAO = new DocumentoDAO();
             if (Files == null || Files.ContentLength == 0)
@@ -345,9 +338,6 @@ namespace RentaWEB2._0.Controllers
                                 string utf8_String = values[2];
                                 byte[] bytes = Encoding.Default.GetBytes(utf8_String);
 
-
-
-
                                 short Num_Correlativo = Convert.ToInt16(values[0]);
                                 int Codigo_tipo_causante = Int32.Parse(values[3]);
                                 int Codigo_tipo_beneficiario = Int32.Parse(values[7]);
@@ -392,8 +382,8 @@ namespace RentaWEB2._0.Controllers
                                 causantes.CODIGO_ESTADO_TUPLA = Codigo_estado_Tupla;
                                 causantes.GLOSA_ESTADO_TUPLA = values[17];
                                 causantes.PROMEDIO_RENTA = Promedio_Renta;
-                               // causanteDAO.Crear(causantes);
-                                causa.Add(causantes);
+                                causanteDAO.Crear(causantes);
+
                                 count = count + 1;
 
 
@@ -404,9 +394,9 @@ namespace RentaWEB2._0.Controllers
                         }
 
                     }
-                  /*  byte[] files = null;
+                    byte[] files = null;
                     Stream stream = Files.InputStream;
-                    using (MemoryStream MS= new MemoryStream())
+                    using (MemoryStream MS = new MemoryStream())
                     {
                         stream.CopyTo(MS);
                         files = MS.ToArray();
@@ -422,30 +412,25 @@ namespace RentaWEB2._0.Controllers
                     doc.NombreReal = fileName;
                     doc.Fecha = DateTime.Parse(Fechas);
                     documentoDAO.Crear(doc);
-                  */
-                    
+
+                    ViewBag.Message = "Archivo Subiendo";
+                    return Redirect("Proceso_de_guardado");
 
 
-                   db.Causante.AddRange(causa);
-                     db.SaveChanges();
-                    ViewBag.Message = "Archivo Subido";
-                    // return Redirect("Proceso_de_guardado");
-                    return Redirect("../Funcionarios/Proceso");
-                    
 
                 }
-                catch (Exception ex )
+                catch (Exception ex)
                 {
                     ViewBag.Message = "Archivo erroneo";
                     ViewBag.Message = ex;
-                     return View();
+                    return View();
 
                 }
 
 
             }
 
-             
+
 
 
 
@@ -456,46 +441,73 @@ namespace RentaWEB2._0.Controllers
         {
             CausantesDAO causanteDAO = new CausantesDAO();
             List<Causante> causantesguardados = causanteDAO.GetCausantes();
-            DocumentoDAO documentoDAO = new DocumentoDAO();
-            List<Causante> Causantes =  new List<Causante>();
-            
-             foreach (var item in db.Causante)
-                {
-                    Causante causantes = new Causante();
-                    causantes.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
-                    causantes.RUT_CAUSANTE = item.RUT_CAUSANTE;
-                    causantes.NOMBRE_CAUSANTE = item.NOMBRE_CAUSANTE;
-                    causantes.CODIGO_TIPO_CAUSANTE = item.CODIGO_TIPO_CAUSANTE;
-                    causantes.TIPO_CAUSANTE = item.TIPO_CAUSANTE;
-                    causantes.RUT_BENEFICIARIO = item.RUT_BENEFICIARIO;
-                    causantes.NOMBRE_BENEFICIARIO = item.NOMBRE_BENEFICIARIO;
-                    causantes.CODIGO_TIPO_BENEFICIARIO = item.CODIGO_TIPO_BENEFICIARIO;
-                    causantes.TIPO_BENEFICIARIO = item.TIPO_BENEFICIARIO;
-                    causantes.CODIGO_TIPO_BENEFICIO = item.CODIGO_TIPO_BENEFICIO;
-                    causantes.TIPO_BENEFICIO = item.TIPO_BENEFICIO;
-                    causantes.RUT_EMPLEADOR = item.RUT_EMPLEADOR;
-                    causantes.NOMBRE_EMPLEADOR = item.NOMBRE_EMPLEADOR;
-                    causantes.FECHA_RECONOCIMIENTO = item.FECHA_RECONOCIMIENTO;
-                    causantes.TRAMO = item.TRAMO;
-                    causantes.MONTO_BENEFICIO = item.MONTO_BENEFICIO;
-                    causantes.CODIGO_ESTADO_TUPLA = item.CODIGO_ESTADO_TUPLA;
-                    causantes.GLOSA_ESTADO_TUPLA = item.GLOSA_ESTADO_TUPLA;
-                    causantes.PROMEDIO_RENTA = item.PROMEDIO_RENTA;
-                    Causantes.Add(causantes);
-                }
-           
+
+            return View(causantesguardados.OrderBy(Y => Y.NUM_CORRELATIVO).ToList());
 
 
-           return View(causantesguardados.Except(Causantes.OrderBy(A => A.NUM_CORRELATIVO)).OrderBy(Y => Y.NUM_CORRELATIVO).ToList());
-            
-           
         }
 
         [HttpPost]
         public ActionResult Proceso_de_guardado(String id)
         {
+            DocumentoDAO documentoDAO = new DocumentoDAO();
+            List<Documento> documentos = documentoDAO.GetCausantes();
+            CausantesDAO causanteDAO = new CausantesDAO();
+            List<Causante> causantesguardados = causanteDAO.GetCausantes();
+            List<Causante> Repetidos = new List<Causante>();
+            List<Causante> guardados = new List<Causante>();
+            foreach (var items in causantesguardados)
+            {
+                int count = 0;
+                Causante c = new Causante();
+                c.NUM_CORRELATIVO = items.NUM_CORRELATIVO;
+                c.RUT_CAUSANTE = items.RUT_CAUSANTE;
+                c.NOMBRE_CAUSANTE = items.NOMBRE_CAUSANTE;
+                c.CODIGO_TIPO_CAUSANTE = items.CODIGO_TIPO_CAUSANTE;
+                c.TIPO_CAUSANTE = items.TIPO_CAUSANTE;
+                c.RUT_BENEFICIARIO = items.RUT_BENEFICIARIO;
+                c.NOMBRE_BENEFICIARIO = items.NOMBRE_BENEFICIARIO;
+                c.CODIGO_TIPO_BENEFICIARIO = items.CODIGO_TIPO_BENEFICIARIO;
+                c.TIPO_BENEFICIARIO = items.TIPO_BENEFICIARIO;
+                c.CODIGO_TIPO_BENEFICIO = items.CODIGO_TIPO_BENEFICIO;
+                c.TIPO_BENEFICIO = items.TIPO_BENEFICIO;
+                c.RUT_EMPLEADOR = items.RUT_EMPLEADOR;
+                c.NOMBRE_EMPLEADOR = items.NOMBRE_EMPLEADOR;
+                c.FECHA_RECONOCIMIENTO = items.FECHA_RECONOCIMIENTO;
+                c.TRAMO = items.TRAMO;
+                c.MONTO_BENEFICIO = items.MONTO_BENEFICIO;
+                c.CODIGO_ESTADO_TUPLA = items.CODIGO_ESTADO_TUPLA;
+                c.GLOSA_ESTADO_TUPLA = items.GLOSA_ESTADO_TUPLA;
+                c.PROMEDIO_RENTA = items.PROMEDIO_RENTA;
 
 
+
+                foreach (var item in db.Causante)
+                {
+                    count = 0;
+                    Causante ca = new Causante();
+                    ca.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
+                    ca.RUT_CAUSANTE = item.RUT_CAUSANTE;
+                    if (c.NUM_CORRELATIVO == ca.NUM_CORRELATIVO && c.RUT_CAUSANTE.Equals(ca.RUT_CAUSANTE))
+                    {
+                        Repetidos.Add(c);
+                        count = count + 1;
+                        break;
+                    }
+
+
+                }
+                if (count == 0)
+                {
+                    db.Causante.Add(c);
+                    db.SaveChanges();
+
+                }
+
+
+            }
+            db.Documento.AddRange(documentos);
+            db.SaveChanges(); ;
             return Redirect("../Funcionarios/Proceso");
 
 
@@ -515,7 +527,7 @@ namespace RentaWEB2._0.Controllers
         public ActionResult Descargar()
         {
 
-            return View(db.Causante.OrderBy(Y=> Y.NUM_CORRELATIVO).ToList());
+            return View(db.Causante.OrderBy(Y => Y.NUM_CORRELATIVO).ToList());
         }
 
 
@@ -524,8 +536,8 @@ namespace RentaWEB2._0.Controllers
         {
 
             var gv = new GridView();
-           
-         
+
+
             gv.DataSource = db.Causante.OrderBy(x => x.NUM_CORRELATIVO).ToList();
             gv.DataBind();
 
@@ -537,13 +549,13 @@ namespace RentaWEB2._0.Controllers
             StringWriter sb = new StringWriter();
             HtmlTextWriter htmlTw = new HtmlTextWriter(sb);
             gv.RenderControl(htmlTw);
-           
+
             Response.Write(sb.ToString());
             Response.End();
         }
 
 
-      
+
 
     }
 }

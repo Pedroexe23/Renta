@@ -10,75 +10,86 @@
     <link href="~/Content/Style.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="row">
-        <div class="col-lg col-md col-sm">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <h1>¿Estas Seguro  que quieres guardar? </h1>
+    @using (Html.BeginForm())
+    {
+        <main>
+            <div class="row">
+                <div class="col-lg col-md col-sm">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h1>¿Estas Seguro  que quieres guardar? </h1>
+                            <input type="submit" name="id" value="Si" class="btn btn-success separacion_Boton1 " />
+                            <a href="/Causantes/Index"> <input type="button" value="No" class="btn btn-danger  separacion_Boton2 " /></a>
+                        </div>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>NUM. CORRELATIVO</th>
+                                    <th>RUT CAUSANTE</th>
+                                    <th>NOMBRE CAUSANTE</th>
+                                    <th>CODIGO TIPO CAUSANTE</th>
+                                    <th>TIPO CAUSANTE</th>
+                                    <th>RUT BENEFICIARIO</th>
+                                    <th>NOMBRE BENEFICIARIO</th>
+                                    <th>CODIGO TIPO BENEFICIARIO</th>
+                                    <th>TIPO BENEFICIARIO</th>
+                                    <th>CODIGO TIPO BENEFICIO</th>
+                                    <th>TIPO BENEFICIO</th>
+                                    <th>RUT EMPLEADOR</th>
+                                    <th>NOMBRE EMPLEADOR</th>
+                                    <th>FECHA RECONOCIMIENTO</th>
+                                    <th>TRAMO</th>
+                                    <th>MONTO BENEFICIO</th>
+                                    <th>CODIGO ESTADO TUPLA</th>
+                                    <th>GLOSA ESTADO TUPLA</th>
+                                    <th>PROMEDIO RENTA</th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
+
+                                @foreach (var CElementos in Model)
+                                {
+                                    <tr>
+                                        <td>@CElementos.NUM_CORRELATIVO</td>
+                                        <td>@CElementos.RUT_CAUSANTE</td>
+                                        <td>@CElementos.NOMBRE_CAUSANTE</td>
+                                        <td>@CElementos.CODIGO_TIPO_CAUSANTE</td>
+                                        <td>@CElementos.TIPO_CAUSANTE</td>
+                                        <td>@CElementos.RUT_BENEFICIARIO</td>
+                                        <td>@CElementos.NOMBRE_BENEFICIARIO</td>
+                                        <td>@CElementos.CODIGO_TIPO_BENEFICIARIO</td>
+                                        <td>@CElementos.TIPO_BENEFICIARIO</td>
+                                        <td>@CElementos.CODIGO_TIPO_BENEFICIO</td>
+                                        <td>@CElementos.TIPO_BENEFICIO</td>
+                                        <td>@CElementos.RUT_EMPLEADOR</td>
+                                        <td>@CElementos.NOMBRE_EMPLEADOR</td>
+                                        <td>@CElementos.FECHA_RECONOCIMIENTO</td>
+                                        <td>@CElementos.TRAMO </td>
+                                        <td>@CElementos.MONTO_BENEFICIO</td>
+                                        <td>@CElementos.CODIGO_ESTADO_TUPLA</td>
+                                        <td>@CElementos.GLOSA_ESTADO_TUPLA</td>
+                                        <td>@CElementos.PROMEDIO_RENTA</td>
+
+
+
+                                    </tr>
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
-
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>NUM. CORRELATIVO</th>
-                            <th>RUT CAUSANTE</th>
-                            <th>NOMBRE CAUSANTE</th>
-                            <th>CODIGO TIPO CAUSANTE</th>
-                            <th>TIPO CAUSANTE</th>
-                            <th>RUT BENEFICIARIO</th>
-                            <th>NOMBRE BENEFICIARIO</th>
-                            <th>CODIGO TIPO BENEFICIARIO</th>
-                            <th>TIPO BENEFICIARIO</th>
-                            <th>CODIGO TIPO BENEFICIO</th>
-                            <th>TIPO BENEFICIO</th>
-                            <th>RUT EMPLEADOR</th>
-                            <th>NOMBRE EMPLEADOR</th>
-                            <th>FECHA RECONOCIMIENTO</th>
-                            <th>TRAMO</th>
-                            <th>MONTO BENEFICIO</th>
-                            <th>CODIGO ESTADO TUPLA</th>
-                            <th>GLOSA ESTADO TUPLA</th>
-                            <th>PROMEDIO RENTA</th>
-
-                        </tr>
-
-                    </thead>
-                    <tbody>
-
-                        @foreach (var CElementos in Model)
-                        {
-                            <tr>
-                                <td>@CElementos.NUM_CORRELATIVO</td>
-                                <td>@CElementos.RUT_CAUSANTE</td>
-                                <td>@CElementos.NOMBRE_CAUSANTE</td>
-                                <td>@CElementos.CODIGO_TIPO_CAUSANTE</td>
-                                <td>@CElementos.TIPO_CAUSANTE</td>
-                                <td>@CElementos.RUT_BENEFICIARIO</td>
-                                <td>@CElementos.NOMBRE_BENEFICIARIO</td>
-                                <td>@CElementos.CODIGO_TIPO_BENEFICIARIO</td>
-                                <td>@CElementos.TIPO_BENEFICIARIO</td>
-                                <td>@CElementos.CODIGO_TIPO_BENEFICIO</td>
-                                <td>@CElementos.TIPO_BENEFICIO</td>
-                                <td>@CElementos.RUT_EMPLEADOR</td>
-                                <td>@CElementos.NOMBRE_EMPLEADOR</td>
-                                <td>@CElementos.FECHA_RECONOCIMIENTO</td>
-                                <td>@CElementos.TRAMO </td>
-                                <td>@CElementos.MONTO_BENEFICIO</td>
-                                <td>@CElementos.CODIGO_ESTADO_TUPLA</td>
-                                <td>@CElementos.GLOSA_ESTADO_TUPLA</td>
-                                <td>@CElementos.PROMEDIO_RENTA</td>
-
-
-
-                            </tr>
-
-                        }
-
-                    </tbody>
-                </table>
             </div>
-        </div>
-    </div>
+        </main>
+
+
+
+    }
 </body>
 </html>
 

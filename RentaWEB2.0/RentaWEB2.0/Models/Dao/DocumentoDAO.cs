@@ -17,6 +17,11 @@ namespace RentaWEB2._0.Models.Dao
         {
             return documentos;
         }
+        public void EliminarLista(Documento d)
+        {
+            documentos.Remove(d);
+            
+        }
 
 
     }

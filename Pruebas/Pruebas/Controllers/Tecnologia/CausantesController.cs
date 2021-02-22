@@ -85,49 +85,6 @@ namespace Pruebas.Controllers.Tecnologia
             return View(causante);
         }
 
-        // POST: Causantes/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
-        // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "NUM_CORRELATIVO,RUT_CAUSANTE,NOMBRE_CAUSANTE,CODIGO_TIPO_CAUSANTE,TIPO_CAUSANTE,RUT_BENEFICIARIO,NOMBRE_BENEFICIARIO,CODIGO_TIPO_BENEFICIARIO,TIPO_BENEFICIARIO,CODIGO_TIPO_BENEFICIO,TIPO_BENEFICIO,RUT_EMPLEADOR,NOMBRE_EMPLEADOR,FECHA_RECONOCIMIENTO,TRAMO,MONTO_BENEFICIO,CODIGO_ESTADO_TUPLA,GLOSA_ESTADO_TUPLA,PROMEDIO_RENTA")] Causante causante)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(causante).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.TRAMO = new SelectList(db.Asignacion_Familiar, "Tramo", "Requisito_De_Sistema", causante.TRAMO);
-            ViewBag.NUM_CORRELATIVO = new SelectList(db.Funcionarios, "Id_Funcionario", "Rut", causante.NUM_CORRELATIVO);
-            return View(causante);
-        }
-
-        // GET: Causantes/Delete/5
-        public ActionResult Delete(short? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Causante causante = db.Causantes.Find(id);
-            if (causante == null)
-            {
-                return HttpNotFound();
-            }
-            return View(causante);
-        }
-
-        // POST: Causantes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(short id)
-        {
-            Causante causante = db.Causantes.Find(id);
-            db.Causantes.Remove(causante);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
 
         protected override void Dispose(bool disposing)
         {
@@ -361,8 +318,11 @@ namespace Pruebas.Controllers.Tecnologia
                 c.CODIGO_ESTADO_TUPLA = items.CODIGO_ESTADO_TUPLA;
                 c.GLOSA_ESTADO_TUPLA = items.GLOSA_ESTADO_TUPLA;
                 c.PROMEDIO_RENTA = items.PROMEDIO_RENTA;
-                foreach (var item in db.Causantes)
-                {
+              
+
+                
+                    foreach (var item in db.Causantes)
+                    {
                     count = 0;
                     Causante ca = new Causante();
                     ca.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
@@ -375,13 +335,14 @@ namespace Pruebas.Controllers.Tecnologia
                     }
                 
 
-                }
-                if (count ==0)
-                {
+                     }
+                    if (count ==0)
+                    {
                     db.Causantes.Add(c);
                     db.SaveChanges();
 
-                }
+                    }
+                
 
             }
             

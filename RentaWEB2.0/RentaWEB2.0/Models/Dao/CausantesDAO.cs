@@ -17,6 +17,10 @@ namespace RentaWEB2._0.Models.Dao
         {
             return causantes;  
         }
+        public void EliminarCausante(Causante c)
+        {
+            causantes.Remove(c);
+        }
 
     }
 }
