@@ -394,16 +394,15 @@ namespace RentaWEB2._0.Controllers
                         }
 
                     }
-                    byte[] files = null;
-                    Stream stream = Files.InputStream;
-                    using (MemoryStream MS = new MemoryStream())
+                    /*
+                    byte[] file = null;
+                    Stream myStream = Files.OpenFile(fileName);
+                    using (MemoryStream ms = new MemoryStream())
                     {
-                        stream.CopyTo(MS);
-                        files = MS.ToArray();
-
-
+                        myStream.CopyTo(ms);
+                        file = ms.ToArray();
                     }
-                    String Fechas = DateTime.Now.Date.ToString("dd-MM-yyyy");
+                    String Fechas = DateTime.Now.Date.ToString("dd/MM/yyyy");
                     Documento doc = new Documento();
                     int id = 1;
                     doc.id_Documento = id;
@@ -413,9 +412,9 @@ namespace RentaWEB2._0.Controllers
                     doc.Fecha = DateTime.Parse(Fechas);
                     documentoDAO.Crear(doc);
 
+                    */
                     ViewBag.Message = "Archivo Subiendo";
                     return Redirect("Proceso_de_guardado");
-
 
 
                 }

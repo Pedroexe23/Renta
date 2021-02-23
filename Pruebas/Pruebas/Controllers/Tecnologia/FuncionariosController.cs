@@ -271,8 +271,6 @@ namespace Pruebas.Controllers.Tecnologia
                 db.SaveChanges();
             }
             
-            // db.Funcionarios.AddRange(funcionarios);
-            // db.SaveChanges();
 
             return Redirect("../Causantes/Descargar");
 

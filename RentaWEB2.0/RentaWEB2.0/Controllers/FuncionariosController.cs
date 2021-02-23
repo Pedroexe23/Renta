@@ -136,14 +136,18 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Proceso(String id)
         {
+           
             // se crea dos Listas distintas una que esta guardado en el CausanteDAO y otro una lista con la clase funcionario 
             List<Causante> listaCausante = causanteDAO.GetCausantes();
             List<Funcionario> funcionarios = new List<Funcionario>();
+            List<Funcionario> repetidos = new List<Funcionario>();
+            List<Funcionario> norepetidos = new List<Funcionario>();
+            List<Funcionario> nuevo = new List<Funcionario>();
             /* se crea 3 variables una para guardar a los nuevos funcionarios otro
-             * para activar funcionarios y otro para desactivar los funcionarios */ 
-            int counts = 0;
-            int count = 0;
+             * para activar funcionarios y otro para desactivar los funcionarios */
+            int on = 1;
             int c = 0;
+            int b;
             foreach (var item in listaCausante)
             {
                 /* se crea las variables  strings para guardar los nombres y apellidos,  el nombre 1 es el nombre principal,
@@ -211,93 +215,113 @@ namespace RentaWEB2._0.Controllers
                 funcionario.Direccion = "Null";
                 /* Los objectos seran almacenados en una lista de objectos de Funcionarios  */
                 funcionarios.Add(funcionario);
-                
+
             }
             /* se va a mostrar los datos almacenados en la base de datos en el objecto Funcionario y counts se va a 0 y el objecto almacenado  */
-            foreach (var items in db.Funcionario)
+
+            foreach (var ilem in funcionarios)
             {
-                counts = 0;
-                Funcionario funcionario1 = new Funcionario();
-                funcionario1.Id_Funcionario = items.Id_Funcionario;
-                funcionario1.Rut = items.Rut;
-                /* se va a mostrar los datos almacenados en la lista de objecto Funcionario almacenados  */
-                foreach (var ilem in funcionarios)
+                b = 0;
+                Funcionario funcionario = new Funcionario();
+                funcionario.Id_Funcionario = ilem.Id_Funcionario;
+                funcionario.Rut = ilem.Rut;
+                funcionario.Nombres = ilem.Nombres;
+                funcionario.Apellidos = ilem.Apellidos;
+                funcionario.RentaPromedio = ilem.RentaPromedio;
+                funcionario.Activo = ilem.Activo;
+                funcionario.Sexo = ilem.Sexo;
+                funcionario.EstadoCivil = ilem.EstadoCivil;
+                funcionario.Fec_nacimiento = ilem.Fec_nacimiento;
+                funcionario.Direccion = ilem.Direccion;
+
+                foreach (var items in db.Funcionario)
                 {
                     
-                    Funcionario funcionario = new Funcionario();
-                    funcionario.Id_Funcionario = ilem.Id_Funcionario;
-                    funcionario.Rut = ilem.Rut;
-                    funcionario.Nombres = ilem.Nombres;
-                    funcionario.Apellidos = ilem.Apellidos;
-                    funcionario.RentaPromedio = ilem.RentaPromedio;
-                    funcionario.Activo = ilem.Activo;
-                    funcionario.Sexo = ilem.Sexo;
-                    funcionario.EstadoCivil = ilem.EstadoCivil;
-                    funcionario.Fec_nacimiento = ilem.Fec_nacimiento;
-                    funcionario.Direccion = ilem.Direccion;
-                    /* si id funcionario de la base de datos es igual a la lista y  el Rut de la Base de datos es igual al rut de la lista
-                     * entonces counts se queda en cero y se edita el activo a 1 por comando SQL y descansa   */
+                    Funcionario funcionario1 = new Funcionario();
+                    funcionario1.Id_Funcionario = items.Id_Funcionario;
+                    funcionario1.Rut = items.Rut;
+
                     if (funcionario1.Id_Funcionario == ilem.Id_Funcionario && funcionario1.Rut.Equals(ilem.Rut))
                     {
-                        counts = counts+(counts*-1);
-                        funcionario1.Activo = 1;
-                        conexion.Close();
-                        conexion.Open();
-                        String Cadena = "update Funcionario set Activo =" + funcionario1.Activo + "where Id_Funcionario =" + funcionario1.Id_Funcionario + "";
-                        SqlCommand command = new SqlCommand(Cadena, conexion);
-                        int cant;
-                        cant = command.ExecuteNonQuery();
-                        conexion.Close();
+                        b = 0;
                         c = c + 1;
-                        break;
-
+                        repetidos.Add(funcionario);
                     }
-                    /* si no count se eleva a 1 y counts disminuye a -1 */
                     else
                     {
-                        counts = 1 + counts;
-                       count = 1 + count;
-                    }
-                    /* si count es mayor a cero entonces el activo del funcionario sera 0  por comando  SQL  */
-                    if (count > 0)
-                    {
+                        on= 0;
                         c = c + 1;
-                        funcionario1.Activo = 0;
-                        conexion.Close();
-                        conexion.Open();
-                        String Cadena = "update Funcionario set Activo =" + funcionario1.Activo + "where Id_Funcionario =" + funcionario1.Id_Funcionario + "";
-                        SqlCommand command = new SqlCommand(Cadena, conexion);
-                        int cant;
-                        cant = command.ExecuteNonQuery();
-                        conexion.Close();
-
+                        b = b + 1;
+                        norepetidos.Add(funcionario1);
                     }
-                    /* si counts es menor a cero entonces el objecto funcionario sera almacenado en la base de datos  */
-                    if (counts > 2)
+                    if (b==db.Funcionario.Count())
                     {
-                        counts = 0;
-                        db.Funcionario.Add(funcionario);
                         
+                        nuevo.Add(funcionario);
                     }
-                    
+
+                    /* se va a mostrar los datos almacenados en la lista de objecto Funcionario almacenados  */
+
+
                 }
-                db.SaveChanges();
-
             }
-            /*en caso que la base de datos esta vacia, la Variable c estara en 0 
-             *  y la lista de objectos funcionarios se guardara en la Base de datos por DEFAULT */
-            if (c == 0)
+
+            foreach (var item in norepetidos)
             {
-                db.Funcionario.AddRange(funcionarios);
-                db.SaveChanges();
+                Funcionario funcionario = new Funcionario();
+                funcionario.Id_Funcionario = item.Id_Funcionario;
+                conexion.Close();
+                conexion.Open();
+                String Cadena = "update Funcionario set Activo =" + 0 + "where Id_Funcionario =" + funcionario.Id_Funcionario + "";
+                SqlCommand command = new SqlCommand(Cadena, conexion);
+                int cant;
+                cant = command.ExecuteNonQuery();
+                conexion.Close();
+            }
+            foreach (var item in repetidos)
+            {
+                Funcionario funcionario = new Funcionario();
+                funcionario.Id_Funcionario = item.Id_Funcionario;
+                conexion.Close();
+                conexion.Open();
+                String Cadena = "update Funcionario set Activo =" + 1 + "where Id_Funcionario =" + funcionario.Id_Funcionario + "";
+                SqlCommand command = new SqlCommand(Cadena, conexion);
+                int cant;
+                cant = command.ExecuteNonQuery();
+                conexion.Close();
+            }
+            foreach (var item in nuevo)
+            {
+                on = 1;
             }
 
 
-            return Redirect("../Causantes/Descargar");
 
-        }
+            if (on==1)
+            {
+                
+            
+                /*en caso que la base de datos esta vacia, la Variable c estara en 0 
+                     *  y la lista de objectos funcionarios se guardara en la Base de datos por DEFAULT */
+                if (c == 0)
+                {
+                db.Funcionario.AddRange(funcionarios);
 
+                }
+                else
+                {
+                db.Funcionario.AddRange(nuevo);
+                }
 
+                db.SaveChanges();
+                return Redirect("../Causantes/Descargar");
+            }
+            else
+            {
+                return Redirect("../Causantes/Descargar");
+            }
+           
+        }      
 
     }
 
