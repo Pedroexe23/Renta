@@ -188,6 +188,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Actividad.cs" />
     <Compile Include="Models\Asignacion_Familiar.cs" />
     <Compile Include="Models\Causante.cs" />
     <Compile Include="Models\Dao\CausantesDAO.cs" />

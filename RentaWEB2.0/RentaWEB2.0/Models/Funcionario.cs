@@ -13,7 +13,7 @@ namespace RentaWEB2._0.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public short Id_Funcionario { get; set; }
 
-        public short? Activo { get; set; }
+        public short Activo { get; set; }
 
         [StringLength(10)]
         public string Rut { get; set; }
@@ -24,15 +24,15 @@ namespace RentaWEB2._0.Models
         [StringLength(40)]
         public string Nombres { get; set; }
 
-        public short? Sexo { get; set; }
+        public short Sexo { get; set; }
 
-        public short? EstadoCivil { get; set; }
+        public short EstadoCivil { get; set; }
 
         public DateTime? Fec_nacimiento { get; set; }
 
         [StringLength(40)]
         public string Direccion { get; set; }
 
-        public int? RentaPromedio { get; set; }
+        public int RentaPromedio { get; set; }
     }
 }

@@ -264,7 +264,11 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Insertar(HttpPostedFileBase Files)
         {
+
             CausantesDAO causanteDAO = new CausantesDAO();
+            causanteDAO.EliminarCausantes();
+            
+            
             List<Causante> causa = new List<Causante>();
             DocumentoDAO documentoDAO = new DocumentoDAO();
             if (Files == null || Files.ContentLength == 0)
@@ -447,7 +451,7 @@ namespace RentaWEB2._0.Controllers
         }
 
         [HttpPost]
-        public ActionResult Proceso_de_guardado(String id)
+        public ActionResult Proceso_de_guardado(String Guardar)
         {
             DocumentoDAO documentoDAO = new DocumentoDAO();
             List<Documento> documentos = documentoDAO.GetCausantes();
@@ -505,10 +509,22 @@ namespace RentaWEB2._0.Controllers
 
 
             }
-            db.Documento.AddRange(documentos);
-            db.SaveChanges(); ;
+           
             return Redirect("../Funcionarios/Proceso");
 
+
+        }
+
+        
+        public ActionResult Proceso_de_guardado(String Retroceder , String Value)
+        {
+            CausantesDAO causanteDAO = new CausantesDAO();
+            List<Causante> causantes = causanteDAO.GetCausantes();
+
+           
+
+
+            return Redirect("Insertar");
 
         }
 
@@ -521,12 +537,73 @@ namespace RentaWEB2._0.Controllers
 
 
 
-
-
         public ActionResult Descargar()
         {
+         
+            List<Actividad> activos = new List<Actividad>();
+            foreach (var items in db.Causante )
+            {
+                Causante c = new Causante();
+                c.NUM_CORRELATIVO = items.NUM_CORRELATIVO;
+                c.RUT_CAUSANTE = items.RUT_CAUSANTE;
+                c.NOMBRE_CAUSANTE = items.NOMBRE_CAUSANTE;
+                c.CODIGO_TIPO_CAUSANTE = items.CODIGO_TIPO_CAUSANTE;
+                c.TIPO_CAUSANTE = items.TIPO_CAUSANTE;
+                c.RUT_BENEFICIARIO = items.RUT_BENEFICIARIO;
+                c.NOMBRE_BENEFICIARIO = items.NOMBRE_BENEFICIARIO;
+                c.CODIGO_TIPO_BENEFICIARIO = items.CODIGO_TIPO_BENEFICIARIO;
+                c.TIPO_BENEFICIARIO = items.TIPO_BENEFICIARIO;
+                c.CODIGO_TIPO_BENEFICIO = items.CODIGO_TIPO_BENEFICIO;
+                c.TIPO_BENEFICIO = items.TIPO_BENEFICIO;
+                c.RUT_EMPLEADOR = items.RUT_EMPLEADOR;
+                c.NOMBRE_EMPLEADOR = items.NOMBRE_EMPLEADOR;
+                c.FECHA_RECONOCIMIENTO = items.FECHA_RECONOCIMIENTO;
+                c.TRAMO = items.TRAMO;
+                c.MONTO_BENEFICIO = items.MONTO_BENEFICIO;
+                c.CODIGO_ESTADO_TUPLA = items.CODIGO_ESTADO_TUPLA;
+                c.GLOSA_ESTADO_TUPLA = items.GLOSA_ESTADO_TUPLA;
+                c.PROMEDIO_RENTA = items.PROMEDIO_RENTA;
+                foreach (var item in db.Funcionario)
+                {
+                    Funcionario F = new Funcionario();
+                    F.Id_Funcionario = item.Id_Funcionario;
+                    F.Rut = item.Rut;
+                    F.Activo = item.Activo;
+                    if (c.NUM_CORRELATIVO==F.Id_Funcionario && c.RUT_CAUSANTE.Equals(F.Rut))
+                    {
+                        Actividad A = new Actividad();
+                        A.NUM_CORRELATIVO = c.NUM_CORRELATIVO;
+                        A.RUT_CAUSANTE = c.RUT_CAUSANTE;
+                        A.NOMBRE_CAUSANTE = c.NOMBRE_CAUSANTE;
+                        A.CODIGO_TIPO_CAUSANTE = c.CODIGO_TIPO_CAUSANTE;
+                        A.TIPO_CAUSANTE = c.TIPO_CAUSANTE;
+                        A.RUT_BENEFICIARIO = c.RUT_BENEFICIARIO;
+                        A.NOMBRE_BENEFICIARIO = c.NOMBRE_BENEFICIARIO;
+                        A.CODIGO_TIPO_BENEFICIARIO = c.CODIGO_TIPO_BENEFICIARIO;
+                        A.TIPO_BENEFICIARIO = c.TIPO_BENEFICIARIO;
+                        A.CODIGO_TIPO_BENEFICIO = c.CODIGO_TIPO_BENEFICIO;
+                        A.TIPO_BENEFICIO = c.TIPO_BENEFICIO;
+                        A.RUT_EMPLEADOR = c.RUT_EMPLEADOR;
+                        A.NOMBRE_EMPLEADOR = c.NOMBRE_EMPLEADOR;
+                        A.FECHA_RECONOCIMIENTO = c.FECHA_RECONOCIMIENTO;
+                        A.TRAMO = c.TRAMO;
+                        A.MONTO_BENEFICIO = c.MONTO_BENEFICIO;
+                        A.CODIGO_ESTADO_TUPLA = c.CODIGO_ESTADO_TUPLA;
+                        A.GLOSA_ESTADO_TUPLA = c.GLOSA_ESTADO_TUPLA;
+                        A.PROMEDIO_RENTA = c.PROMEDIO_RENTA;
+                        A.ACTIVO = F.Activo;
+                        activos.Add(A);
+                    }
+                }
+            }
 
-            return View(db.Causante.OrderBy(Y => Y.NUM_CORRELATIVO).ToList());
+
+
+
+            return View(activos.OrderBy(a => a.NUM_CORRELATIVO).ToList()) ;
+                   
+
+
         }
 
 

@@ -312,12 +312,13 @@ namespace RentaWEB2._0.Controllers
                 {
                 db.Funcionario.AddRange(nuevo);
                 }
-
+                causanteDAO.EliminarCausantes();
                 db.SaveChanges();
                 return Redirect("../Causantes/Descargar");
             }
             else
             {
+                causanteDAO.EliminarCausantes();
                 return Redirect("../Causantes/Descargar");
             }
            

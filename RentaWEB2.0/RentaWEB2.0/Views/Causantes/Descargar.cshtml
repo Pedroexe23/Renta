@@ -1,4 +1,5 @@
-﻿@{ 
+﻿
+@{
 
     ViewBag.Title = "Descargar";
 }
@@ -51,30 +52,59 @@
 
                         @foreach (var CElementos in Model)
                         {
-                            <tr>
-                                <td>@CElementos.NUM_CORRELATIVO</td>
-                                <td>@CElementos.RUT_CAUSANTE</td>
-                                <td>@CElementos.NOMBRE_CAUSANTE</td>
-                                <td>@CElementos.CODIGO_TIPO_CAUSANTE</td>
-                                <td>@CElementos.TIPO_CAUSANTE</td>
-                                <td>@CElementos.RUT_BENEFICIARIO</td>
-                                <td>@CElementos.NOMBRE_BENEFICIARIO</td>
-                                <td>@CElementos.CODIGO_TIPO_BENEFICIARIO</td>
-                                <td>@CElementos.TIPO_BENEFICIARIO</td>
-                                <td>@CElementos.CODIGO_TIPO_BENEFICIO</td>
-                                <td>@CElementos.TIPO_BENEFICIO</td>
-                                <td>@CElementos.RUT_EMPLEADOR</td>
-                                <td>@CElementos.NOMBRE_EMPLEADOR</td>
-                                <td>@CElementos.FECHA_RECONOCIMIENTO</td>
-                                <td>@CElementos.TRAMO </td>
-                                <td>@CElementos.MONTO_BENEFICIO</td>
-                                <td>@CElementos.CODIGO_ESTADO_TUPLA</td>
-                                <td>@CElementos.GLOSA_ESTADO_TUPLA</td>
-                                <td>@CElementos.PROMEDIO_RENTA</td>
+                            if (CElementos.ACTIVO== 1)
+                            {
+                                <tr bgcolor="#008f39" class="text-white" >
+                                    <td >@CElementos.NUM_CORRELATIVO</td>
+                                    <td>@CElementos.RUT_CAUSANTE</td>
+                                    <td>@CElementos.NOMBRE_CAUSANTE</td>
+                                    <td>@CElementos.CODIGO_TIPO_CAUSANTE</td>
+                                    <td>@CElementos.TIPO_CAUSANTE</td>
+                                    <td>@CElementos.RUT_BENEFICIARIO</td>
+                                    <td>@CElementos.NOMBRE_BENEFICIARIO</td>
+                                    <td>@CElementos.CODIGO_TIPO_BENEFICIARIO</td>
+                                    <td>@CElementos.TIPO_BENEFICIARIO</td>
+                                    <td>@CElementos.CODIGO_TIPO_BENEFICIO</td>
+                                    <td>@CElementos.TIPO_BENEFICIO</td>
+                                    <td>@CElementos.RUT_EMPLEADOR</td>
+                                    <td>@CElementos.NOMBRE_EMPLEADOR</td>
+                                    <td>@CElementos.FECHA_RECONOCIMIENTO</td>
+                                    <td>@CElementos.TRAMO </td>
+                                    <td>@CElementos.MONTO_BENEFICIO</td>
+                                    <td>@CElementos.CODIGO_ESTADO_TUPLA</td>
+                                    <td>@CElementos.GLOSA_ESTADO_TUPLA</td>
+                                    <td>@CElementos.PROMEDIO_RENTA</td>
+                                </tr>
+
+                            }
+                            else
+                            {
+                                <tr bgcolor="ff0000" class="text-white" >
+                                    <td>@CElementos.NUM_CORRELATIVO</td>
+                                    <td>@CElementos.RUT_CAUSANTE</td>
+                                    <td>@CElementos.NOMBRE_CAUSANTE</td>
+                                    <td>@CElementos.CODIGO_TIPO_CAUSANTE</td>
+                                    <td>@CElementos.TIPO_CAUSANTE</td>
+                                    <td>@CElementos.RUT_BENEFICIARIO</td>
+                                    <td>@CElementos.NOMBRE_BENEFICIARIO</td>
+                                    <td>@CElementos.CODIGO_TIPO_BENEFICIARIO</td>
+                                    <td>@CElementos.TIPO_BENEFICIARIO</td>
+                                    <td>@CElementos.CODIGO_TIPO_BENEFICIO</td>
+                                    <td>@CElementos.TIPO_BENEFICIO</td>
+                                    <td>@CElementos.RUT_EMPLEADOR</td>
+                                    <td>@CElementos.NOMBRE_EMPLEADOR</td>
+                                    <td>@CElementos.FECHA_RECONOCIMIENTO</td>
+                                    <td>@CElementos.TRAMO </td>
+                                    <td>@CElementos.MONTO_BENEFICIO</td>
+                                    <td>@CElementos.CODIGO_ESTADO_TUPLA</td>
+                                    <td>@CElementos.GLOSA_ESTADO_TUPLA</td>
+                                    <td>@CElementos.PROMEDIO_RENTA</td>
 
 
 
-                            </tr>
+                                </tr>
+                            }
+
 
                         }
 
