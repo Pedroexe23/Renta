@@ -266,6 +266,7 @@
     <Content Include="Views\Funcionarios\Index.cshtml" />
     <Content Include="Views\Funcionarios\Proceso.cshtml" />
     <Content Include="Views\Causantes\Proceso_de_guardado.cshtml" />
+    <Content Include="Views\Causantes\Actualizar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

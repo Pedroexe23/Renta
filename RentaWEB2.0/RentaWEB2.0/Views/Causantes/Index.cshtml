@@ -11,24 +11,22 @@
     <link href="~/Content/Style.css" rel="stylesheet" />
 </head>
 <body>
-    @using (Html.BeginForm())
-
-    {
+   
         <div class="row">
             <div class="col-lg col-md col-sm">
-
-                <div class="separacion_Boton2">
-                    <input type="submit" value="Actualizar" id="Actualizar" class="btn btn-success  agrandar" />
-                </div>
-                <div class="separacion_Boton1">
-                    <a href="/Causantes/Insertar"> <input type="button" value="Insertar" class="btn btn-info text-white agrandar " /> </a>
-                </div>
-
-
                 
+                    <div class=" form-group">
+                        <a href="/Causantes/Actualizar"> <input type="button"  value="Actualizar" class="btn text-black separacion_Boton1" style="background:#a7e9af"   /></a>
+                    </div>
+                    <div class=" form-group">
+                        <a href="/Causantes/Insertar"><input type="button" value="Insertar"  class="btn text-black separacion_Boton1" style="background:#75b79e right" /> </a>
+                    </div>
+                    <div class="form-group">
+                        <a href="/Causantes/Historial"><input type="button" value="Historial"   class="btn text-white separacion_Boton1" style="background:#29639f center"/> </a>
+                </div>
             </div>
         </div>
-    }
-    <a href="/Causantes/Descargar"><input type="button" name="id" value="Descargar archivo" class="btn btn-success" /></a>
+    
+    
 </body>
 </html>

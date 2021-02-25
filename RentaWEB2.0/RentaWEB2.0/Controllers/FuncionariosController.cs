@@ -299,8 +299,6 @@ namespace RentaWEB2._0.Controllers
 
             if (on==1)
             {
-                
-            
                 /*en caso que la base de datos esta vacia, la Variable c estara en 0 
                      *  y la lista de objectos funcionarios se guardara en la Base de datos por DEFAULT */
                 if (c == 0)

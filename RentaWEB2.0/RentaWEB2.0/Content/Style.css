@@ -1,4 +1,9 @@
-﻿.separacionU {
+﻿:root{
+    --color-insertar:#a7e9af;
+    --color-actualizar:#75b79e;
+    --color-historial:#29639f;
+}
+.separacionU {
     margin-left: 23px;
 }
 
@@ -27,4 +32,13 @@
 .table {
     width: 20px;
     height: 20px;
+}
+.bg-insertar {
+   background:var(--color-insertar);
+}
+.bg-historial {
+  background:var(--color-historial);
+}
+.bg-actualizar {
+  background:var(--color-actualizar);
 }

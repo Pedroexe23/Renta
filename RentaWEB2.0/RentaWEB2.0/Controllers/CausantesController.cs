@@ -26,109 +26,9 @@ namespace RentaWEB2._0.Controllers
         // GET: Causantes
         public ActionResult Index()
         {
-
             return View();
         }
-        [HttpPost]
-        public ActionResult Index(string Actualizar, Causante causante)
-        {
-
-            List<Causante> causantes = new List<Causante>();
-            int tramo = 0;
-            int monto = 0;
-            int Renta = 0;
-            int[] tramos = new int[9];
-            int[] montos = new int[9];
-
-
-
-            foreach (var item in db.Causante)
-            {
-                causante.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
-                causante.RUT_CAUSANTE = item.RUT_CAUSANTE;
-                causante.NOMBRE_CAUSANTE = item.NOMBRE_CAUSANTE;
-                causante.CODIGO_TIPO_CAUSANTE = item.CODIGO_TIPO_CAUSANTE;
-                causante.TIPO_CAUSANTE = item.TIPO_CAUSANTE;
-                causante.RUT_BENEFICIARIO = item.RUT_BENEFICIARIO;
-                causante.NOMBRE_BENEFICIARIO = item.NOMBRE_BENEFICIARIO;
-                causante.CODIGO_TIPO_BENEFICIARIO = item.CODIGO_TIPO_BENEFICIARIO;
-                causante.TIPO_BENEFICIARIO = item.TIPO_BENEFICIARIO;
-                causante.CODIGO_TIPO_BENEFICIO = item.CODIGO_TIPO_BENEFICIO;
-                causante.TIPO_BENEFICIO = item.TIPO_BENEFICIO;
-                causante.RUT_EMPLEADOR = item.RUT_EMPLEADOR;
-                causante.NOMBRE_EMPLEADOR = item.NOMBRE_EMPLEADOR;
-                causante.FECHA_RECONOCIMIENTO = item.FECHA_RECONOCIMIENTO;
-                causante.TRAMO = item.TRAMO;
-                causante.CODIGO_ESTADO_TUPLA = item.CODIGO_ESTADO_TUPLA;
-                causante.GLOSA_ESTADO_TUPLA = item.GLOSA_ESTADO_TUPLA;
-                Renta = item.PROMEDIO_RENTA;
-                causante.RUT_CAUSANTE = item.RUT_CAUSANTE;
-                tramo = item.TRAMO;
-                monto = item.MONTO_BENEFICIO;
-
-                if (Renta <= 342246)
-                {
-                    foreach (var list in db.Asignacion_Familiar)
-                    {
-                        if (list.Tramo == 1)
-                        {
-                            tramo = (int)list.Tramo;
-                            monto = (int)list.Monto;
-                        }
-
-                    }
-
-                }
-                else if (Renta > 342246 && Renta <= 500033)
-                {
-                    foreach (var list in db.Asignacion_Familiar)
-                    {
-                        if (list.Tramo == 2)
-                        {
-                            tramo = (int)list.Tramo;
-                            monto = (int)list.Monto;
-                        }
-                    }
-
-                }
-                else if (Renta > 500033 && Renta <= 779882)
-                {
-                    foreach (var list in db.Asignacion_Familiar)
-                    {
-                        if (list.Tramo == 3)
-                        {
-                            tramo = (int)list.Tramo;
-                            monto = (int)list.Monto;
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var list in db.Asignacion_Familiar)
-                    {
-                        if (list.Tramo == 4)
-                        {
-                            tramo = (int)list.Tramo;
-                            monto = (int)list.Monto;
-                        }
-                    }
-
-                }
-
-
-                conexion.Close();
-                conexion.Open();
-                String Cadena = "update Causante set MONTO_BENEFICIO = " + monto + ", TRAMO=" + tramo + " where NUM_CORRELATIVO =" + causante.NUM_CORRELATIVO + "";
-
-
-                SqlCommand command = new SqlCommand(Cadena, conexion);
-                int cant;
-                cant = command.ExecuteNonQuery();
-                conexion.Close();
-            }
-
-            return Redirect("Index");
-        }
+        
 
         // GET: Causantes/Details/5
         public ActionResult Details(byte? id)
@@ -267,8 +167,8 @@ namespace RentaWEB2._0.Controllers
 
             CausantesDAO causanteDAO = new CausantesDAO();
             causanteDAO.EliminarCausantes();
-            
-            
+
+
             List<Causante> causa = new List<Causante>();
             DocumentoDAO documentoDAO = new DocumentoDAO();
             if (Files == null || Files.ContentLength == 0)
@@ -348,7 +248,7 @@ namespace RentaWEB2._0.Controllers
 
                                 int Codigo_tipo_beneficio = Int32.Parse(values[9]);
 
-                                DateTime Fecha_Reconocimiento = DateTime.Parse(values[13]);
+                                DateTime Fecha_Reconocimiento = DateTime.Parse(values[13].Replace("/", "-"));
                                 short Tramo = Convert.ToInt16(values[14]);
 
                                 int Monto_Beneficio = Int32.Parse(values[15]);
@@ -509,24 +409,47 @@ namespace RentaWEB2._0.Controllers
 
 
             }
-           
+            foreach (var item in Repetidos)
+            {
+                Causante c = new Causante();
+                c.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
+                c.RUT_CAUSANTE = item.RUT_CAUSANTE;
+                c.NOMBRE_CAUSANTE = item.NOMBRE_CAUSANTE;
+                c.CODIGO_TIPO_CAUSANTE = item.CODIGO_TIPO_CAUSANTE;
+                c.TIPO_CAUSANTE = item.TIPO_CAUSANTE;
+                c.RUT_BENEFICIARIO = item.RUT_BENEFICIARIO;
+                c.NOMBRE_BENEFICIARIO = item.NOMBRE_BENEFICIARIO;
+                c.CODIGO_TIPO_BENEFICIARIO = item.CODIGO_TIPO_BENEFICIARIO;
+                c.TIPO_BENEFICIARIO = item.TIPO_BENEFICIARIO;
+                c.CODIGO_TIPO_BENEFICIO = item.CODIGO_TIPO_BENEFICIO;
+                c.TIPO_BENEFICIO = item.TIPO_BENEFICIO;
+                c.RUT_EMPLEADOR = item.RUT_EMPLEADOR;
+                c.NOMBRE_EMPLEADOR = item.NOMBRE_EMPLEADOR;
+                c.FECHA_RECONOCIMIENTO = item.FECHA_RECONOCIMIENTO.Date;
+                c.TRAMO = item.TRAMO;
+                c.MONTO_BENEFICIO = item.MONTO_BENEFICIO;
+                c.CODIGO_ESTADO_TUPLA = item.CODIGO_ESTADO_TUPLA;
+                c.GLOSA_ESTADO_TUPLA = item.GLOSA_ESTADO_TUPLA;
+                c.PROMEDIO_RENTA = item.PROMEDIO_RENTA;
+                String fecha = c.FECHA_RECONOCIMIENTO.Date.ToString();
+                fecha = fecha.Substring(0, 10);
+                String[] Fechacompleta = fecha.Split('/');
+                fecha = Fechacompleta[2] + "/" + Fechacompleta[1] + "/" + Fechacompleta[0];
+                conexion.Close();
+                conexion.Open();
+                String Cadena = "update Causante set RUT_CAUSANTE=" + "'" + c.RUT_CAUSANTE + "',NOMBRE_CAUSANTE=" + "'" + c.NOMBRE_CAUSANTE + "', CODIGO_TIPO_CAUSANTE=" + c.CODIGO_TIPO_CAUSANTE + ", TIPO_CAUSANTE=" + "'" + c.TIPO_CAUSANTE + "',RUT_BENEFICIARIO=" + "'" + c.RUT_BENEFICIARIO + "', NOMBRE_BENEFICIARIO=" + "'" + c.NOMBRE_BENEFICIARIO + "',CODIGO_TIPO_BENEFICIARIO=" + c.CODIGO_TIPO_BENEFICIARIO + ", TIPO_BENEFICIARIO=" + "'" + c.TIPO_BENEFICIARIO + "', CODIGO_TIPO_BENEFICIO=" + c.CODIGO_TIPO_BENEFICIO + ", TIPO_BENEFICIO=" + "'" + c.TIPO_BENEFICIO + "', RUT_EMPLEADOR=" + "'" + c.RUT_EMPLEADOR + "', FECHA_RECONOCIMIENTO=" + "'" + fecha + "', TRAMO=" + c.TRAMO + ",MONTO_BENEFICIO=" + c.MONTO_BENEFICIO + ",CODIGO_ESTADO_TUPLA=" + c.CODIGO_ESTADO_TUPLA + ", GLOSA_ESTADO_TUPLA= " + "'" + c.GLOSA_ESTADO_TUPLA + "', PROMEDIO_RENTA= " + c.PROMEDIO_RENTA + " where NUM_CORRELATIVO=" + c.NUM_CORRELATIVO + "";
+                SqlCommand command = new SqlCommand(Cadena, conexion);
+                int cant;
+                cant = command.ExecuteNonQuery();
+                conexion.Close();
+            }
             return Redirect("../Funcionarios/Proceso");
 
 
         }
 
-        
-        public ActionResult Proceso_de_guardado(String Retroceder , String Value)
-        {
-            CausantesDAO causanteDAO = new CausantesDAO();
-            List<Causante> causantes = causanteDAO.GetCausantes();
-
-           
 
 
-            return Redirect("Insertar");
-
-        }
 
 
 
@@ -539,9 +462,9 @@ namespace RentaWEB2._0.Controllers
 
         public ActionResult Descargar()
         {
-         
+
             List<Actividad> activos = new List<Actividad>();
-            foreach (var items in db.Causante )
+            foreach (var items in db.Causante)
             {
                 Causante c = new Causante();
                 c.NUM_CORRELATIVO = items.NUM_CORRELATIVO;
@@ -569,7 +492,7 @@ namespace RentaWEB2._0.Controllers
                     F.Id_Funcionario = item.Id_Funcionario;
                     F.Rut = item.Rut;
                     F.Activo = item.Activo;
-                    if (c.NUM_CORRELATIVO==F.Id_Funcionario && c.RUT_CAUSANTE.Equals(F.Rut))
+                    if (c.NUM_CORRELATIVO == F.Id_Funcionario && c.RUT_CAUSANTE.Equals(F.Rut))
                     {
                         Actividad A = new Actividad();
                         A.NUM_CORRELATIVO = c.NUM_CORRELATIVO;
@@ -600,8 +523,8 @@ namespace RentaWEB2._0.Controllers
 
 
 
-            return View(activos.OrderBy(a => a.NUM_CORRELATIVO).ToList()) ;
-                   
+            return View(activos.OrderBy(a => a.NUM_CORRELATIVO).ToList());
+
 
 
         }
@@ -628,6 +551,178 @@ namespace RentaWEB2._0.Controllers
 
             Response.Write(sb.ToString());
             Response.End();
+        }
+
+        public ActionResult Actualizar()
+        {
+
+
+            List<Actividad> activos = new List<Actividad>();
+            foreach (var items in db.Causante)
+            {
+                Causante c = new Causante();
+                c.NUM_CORRELATIVO = items.NUM_CORRELATIVO;
+                c.RUT_CAUSANTE = items.RUT_CAUSANTE;
+                c.NOMBRE_CAUSANTE = items.NOMBRE_CAUSANTE;
+                c.CODIGO_TIPO_CAUSANTE = items.CODIGO_TIPO_CAUSANTE;
+                c.TIPO_CAUSANTE = items.TIPO_CAUSANTE;
+                c.RUT_BENEFICIARIO = items.RUT_BENEFICIARIO;
+                c.NOMBRE_BENEFICIARIO = items.NOMBRE_BENEFICIARIO;
+                c.CODIGO_TIPO_BENEFICIARIO = items.CODIGO_TIPO_BENEFICIARIO;
+                c.TIPO_BENEFICIARIO = items.TIPO_BENEFICIARIO;
+                c.CODIGO_TIPO_BENEFICIO = items.CODIGO_TIPO_BENEFICIO;
+                c.TIPO_BENEFICIO = items.TIPO_BENEFICIO;
+                c.RUT_EMPLEADOR = items.RUT_EMPLEADOR;
+                c.NOMBRE_EMPLEADOR = items.NOMBRE_EMPLEADOR;
+                c.FECHA_RECONOCIMIENTO = items.FECHA_RECONOCIMIENTO;
+                c.TRAMO = items.TRAMO;
+                c.MONTO_BENEFICIO = items.MONTO_BENEFICIO;
+                c.CODIGO_ESTADO_TUPLA = items.CODIGO_ESTADO_TUPLA;
+                c.GLOSA_ESTADO_TUPLA = items.GLOSA_ESTADO_TUPLA;
+                c.PROMEDIO_RENTA = items.PROMEDIO_RENTA;
+                foreach (var item in db.Funcionario)
+                {
+                    Funcionario F = new Funcionario();
+                    F.Id_Funcionario = item.Id_Funcionario;
+                    F.Rut = item.Rut;
+                    F.Activo = item.Activo;
+                    if (c.NUM_CORRELATIVO == F.Id_Funcionario && c.RUT_CAUSANTE.Equals(F.Rut))
+                    {
+                        Actividad A = new Actividad();
+                        A.NUM_CORRELATIVO = c.NUM_CORRELATIVO;
+                        A.RUT_CAUSANTE = c.RUT_CAUSANTE;
+                        A.NOMBRE_CAUSANTE = c.NOMBRE_CAUSANTE;
+                        A.CODIGO_TIPO_CAUSANTE = c.CODIGO_TIPO_CAUSANTE;
+                        A.TIPO_CAUSANTE = c.TIPO_CAUSANTE;
+                        A.RUT_BENEFICIARIO = c.RUT_BENEFICIARIO;
+                        A.NOMBRE_BENEFICIARIO = c.NOMBRE_BENEFICIARIO;
+                        A.CODIGO_TIPO_BENEFICIARIO = c.CODIGO_TIPO_BENEFICIARIO;
+                        A.TIPO_BENEFICIARIO = c.TIPO_BENEFICIARIO;
+                        A.CODIGO_TIPO_BENEFICIO = c.CODIGO_TIPO_BENEFICIO;
+                        A.TIPO_BENEFICIO = c.TIPO_BENEFICIO;
+                        A.RUT_EMPLEADOR = c.RUT_EMPLEADOR;
+                        A.NOMBRE_EMPLEADOR = c.NOMBRE_EMPLEADOR;
+                        A.FECHA_RECONOCIMIENTO = c.FECHA_RECONOCIMIENTO;
+                        A.TRAMO = c.TRAMO;
+                        A.MONTO_BENEFICIO = c.MONTO_BENEFICIO;
+                        A.CODIGO_ESTADO_TUPLA = c.CODIGO_ESTADO_TUPLA;
+                        A.GLOSA_ESTADO_TUPLA = c.GLOSA_ESTADO_TUPLA;
+                        A.PROMEDIO_RENTA = c.PROMEDIO_RENTA;
+                        A.ACTIVO = F.Activo;
+                        activos.Add(A);
+                    }
+                }
+            }
+
+
+
+
+            return View(activos.OrderBy(a => a.NUM_CORRELATIVO).ToList());
+
+
+
+
+           
+        }
+
+        [HttpPost]
+        public ActionResult Actualizar( string Actualizar,  Causante causante)
+        {
+
+            List<Causante> causantes = new List<Causante>();
+            int tramo = 0;
+            int monto = 0;
+            int Renta = 0;
+            int[] tramos = new int[9];
+            int[] montos = new int[9];
+
+
+
+            foreach (var item in db.Causante)
+            {
+                causante.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
+                causante.RUT_CAUSANTE = item.RUT_CAUSANTE;
+                causante.NOMBRE_CAUSANTE = item.NOMBRE_CAUSANTE;
+                causante.CODIGO_TIPO_CAUSANTE = item.CODIGO_TIPO_CAUSANTE;
+                causante.TIPO_CAUSANTE = item.TIPO_CAUSANTE;
+                causante.RUT_BENEFICIARIO = item.RUT_BENEFICIARIO;
+                causante.NOMBRE_BENEFICIARIO = item.NOMBRE_BENEFICIARIO;
+                causante.CODIGO_TIPO_BENEFICIARIO = item.CODIGO_TIPO_BENEFICIARIO;
+                causante.TIPO_BENEFICIARIO = item.TIPO_BENEFICIARIO;
+                causante.CODIGO_TIPO_BENEFICIO = item.CODIGO_TIPO_BENEFICIO;
+                causante.TIPO_BENEFICIO = item.TIPO_BENEFICIO;
+                causante.RUT_EMPLEADOR = item.RUT_EMPLEADOR;
+                causante.NOMBRE_EMPLEADOR = item.NOMBRE_EMPLEADOR;
+                causante.FECHA_RECONOCIMIENTO = item.FECHA_RECONOCIMIENTO;
+                causante.TRAMO = item.TRAMO;
+                causante.CODIGO_ESTADO_TUPLA = item.CODIGO_ESTADO_TUPLA;
+                causante.GLOSA_ESTADO_TUPLA = item.GLOSA_ESTADO_TUPLA;
+                Renta = item.PROMEDIO_RENTA;
+                causante.RUT_CAUSANTE = item.RUT_CAUSANTE;
+                tramo = item.TRAMO;
+                monto = item.MONTO_BENEFICIO;
+
+                if (Renta <= 342246)
+                {
+                    foreach (var list in db.Asignacion_Familiar)
+                    {
+                        if (list.Tramo == 1)
+                        {
+                            tramo = (int)list.Tramo;
+                            monto = (int)list.Monto;
+                        }
+
+                    }
+
+                }
+                else if (Renta > 342246 && Renta <= 500033)
+                {
+                    foreach (var list in db.Asignacion_Familiar)
+                    {
+                        if (list.Tramo == 2)
+                        {
+                            tramo = (int)list.Tramo;
+                            monto = (int)list.Monto;
+                        }
+                    }
+
+                }
+                else if (Renta > 500033 && Renta <= 779882)
+                {
+                    foreach (var list in db.Asignacion_Familiar)
+                    {
+                        if (list.Tramo == 3)
+                        {
+                            tramo = (int)list.Tramo;
+                            monto = (int)list.Monto;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var list in db.Asignacion_Familiar)
+                    {
+                        if (list.Tramo == 4)
+                        {
+                            tramo = (int)list.Tramo;
+                            monto = (int)list.Monto;
+                        }
+                    }
+
+                }
+
+
+                conexion.Close();
+                conexion.Open();
+                String Cadena = "update Causante set MONTO_BENEFICIO = " + monto + ", TRAMO=" + tramo + " where NUM_CORRELATIVO =" + causante.NUM_CORRELATIVO + "";
+
+
+                SqlCommand command = new SqlCommand(Cadena, conexion);
+                int cant;
+                cant = command.ExecuteNonQuery();
+                conexion.Close();
+            }
+            return Redirect("Index");
         }
 
 

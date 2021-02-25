@@ -1,10 +1,8 @@
 ﻿
 @{
 
-    ViewBag.Title = "Descargar";
+    ViewBag.Title = "Actualizar";
 }
-
-<h2>Descargar</h2>
 
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -17,12 +15,16 @@
 <body>
     @using (Html.BeginForm())
     {
-
-        @Html.AntiForgeryToken()
-        <a href="/Causantes/Index"><input type="button" value="Inicio" class="btn btn-info " /></a>
         <div class="row">
             <div class="col-lg col-md col-sm">
-                <table class="table" border="1" cellpadding="1" cellspacing="1" >
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <span>¿Estas Seguro  que quieres actualizar los datos de los causantes con su promedio Renta ?</span>
+                        <input type="submit" name="Actualizar" value="Si" class="btn btn-success separacion_Boton1 " />
+                        <a href="/Causantes/Index"> <input type="button" value="No" class="btn btn-danger  separacion_Boton2 " /></a>
+                    </div>
+                </div>
+                <table class="table" border="1" cellpadding="1" cellspacing="1">
                     <thead>
                         <tr>
                             <th>NUM. CORRELATIVO</th>
@@ -52,10 +54,10 @@
 
                         @foreach (var CElementos in Model)
                         {
-                            if (CElementos.ACTIVO== 1)
+                            if (CElementos.ACTIVO == 1)
                             {
                                 <tr>
-                                    <td width="50%" class="bg-success text-white" >@CElementos.NUM_CORRELATIVO</td>
+                                    <td width="50%" class="bg-success text-white">@CElementos.NUM_CORRELATIVO</td>
                                     <td>@CElementos.RUT_CAUSANTE</td>
                                     <td>@CElementos.NOMBRE_CAUSANTE</td>
                                     <td>@CElementos.CODIGO_TIPO_CAUSANTE</td>
@@ -112,15 +114,7 @@
                 </table>
             </div>
         </div>
-        <div class="row">
-            <input type="submit" name="id" value="Descargar" class="btn btn-success" />
-
-        </div>
+        
     }
-
-
-
-
-
 </body>
 </html>
