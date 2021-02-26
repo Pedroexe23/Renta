@@ -24,12 +24,21 @@ namespace RentaWEB2._0.Models
                 .Property(e => e.Requisito_De_Sistema)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<Asignacion_Familiar>()
+                .HasMany(e => e.Causante)
+                .WithRequired(e => e.Asignacion_Familiar)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Causante>()
+                .HasOptional(e => e.Funcionario)
+                .WithRequired(e => e.Causante);
+
             modelBuilder.Entity<Documento>()
-                .Property(e => e.Nombre)
+                .Property(e => e.Archivo)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Documento>()
-                .Property(e => e.NombreReal)
+                .Property(e => e.tipo)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Funcionario>()

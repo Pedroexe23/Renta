@@ -34,5 +34,7 @@ namespace RentaWEB2._0.Models
         public string Direccion { get; set; }
 
         public int RentaPromedio { get; set; }
+
+        public virtual Causante Causante { get; set; }
     }
 }

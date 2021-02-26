@@ -189,8 +189,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Actividad.cs" />
+    <Compile Include="Models\Archivos.cs" />
     <Compile Include="Models\Asignacion_Familiar.cs" />
     <Compile Include="Models\Causante.cs" />
+    <Compile Include="Models\Dao\ArchivoDAO.cs" />
     <Compile Include="Models\Dao\CausantesDAO.cs" />
     <Compile Include="Models\Dao\DocumentoDAO.cs" />
     <Compile Include="Models\Documento.cs" />
@@ -267,6 +269,7 @@
     <Content Include="Views\Funcionarios\Proceso.cshtml" />
     <Content Include="Views\Causantes\Proceso_de_guardado.cshtml" />
     <Content Include="Views\Causantes\Actualizar.cshtml" />
+    <Content Include="Views\Causantes\Historial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

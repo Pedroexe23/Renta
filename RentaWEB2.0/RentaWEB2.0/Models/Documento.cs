@@ -5,24 +5,24 @@ namespace RentaWEB2._0.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Web;
 
     [Table("Documento")]
     public partial class Documento
     {
+        
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int id_Documento { get; set; }
+        public int Id_documento { get; set; }
 
-        [StringLength(100)]
-        public string Nombre { get; set; }
+        [StringLength(60)]
+        public string Archivo { get; set; }
 
-        [StringLength(100)]
-        public string NombreReal { get; set; }
+        public long Tamaño { get; set; }
 
-        [Column("documento")]
-        public byte[] documento1 { get; set; }
+        [StringLength(10)]
+        public string tipo { get; set; }
 
         [Column(TypeName = "date")]
-        public DateTime? Fecha { get; set; }
+        public DateTime Fecha { get; set; }
     }
 }

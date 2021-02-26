@@ -59,5 +59,9 @@ namespace RentaWEB2._0.Models
         public string GLOSA_ESTADO_TUPLA { get; set; }
 
         public int PROMEDIO_RENTA { get; set; }
+
+        public virtual Asignacion_Familiar Asignacion_Familiar { get; set; }
+
+        public virtual Funcionario Funcionario { get; set; }
     }
 }
