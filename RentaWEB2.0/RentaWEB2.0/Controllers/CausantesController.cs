@@ -164,7 +164,7 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Insertar(HttpPostedFileBase Files)
         {
-            DocumentoDAO documentoDAO = new DocumentoDAO();
+            
             CausantesDAO causanteDAO = new CausantesDAO();
             causanteDAO.EliminarCausantes();
 
@@ -239,8 +239,7 @@ namespace RentaWEB2._0.Controllers
 
                                 Causante causantes = new Causante();
 
-                                string utf8_String = values[2].Replace("Ñ","N").Trim();
-                                byte[] bytes = Encoding.Default.GetBytes(utf8_String);
+                                
 
                                 short Num_Correlativo = Convert.ToInt16(values[0]);
                                 int Codigo_tipo_causante = Int32.Parse(values[3]);
@@ -269,8 +268,8 @@ namespace RentaWEB2._0.Controllers
 
                                 causantes.NUM_CORRELATIVO = Num_Correlativo;
                                 causantes.RUT_CAUSANTE = values[1];
-                                causantes.NOMBRE_CAUSANTE = Encoding.UTF8.GetString(bytes);
-                                causantes.CODIGO_TIPO_CAUSANTE = Codigo_tipo_causante;
+                                causantes.NOMBRE_CAUSANTE = values[2].Replace("Ñ", "N").Trim();
+                            causantes.CODIGO_TIPO_CAUSANTE = Codigo_tipo_causante;
                                 causantes.TIPO_CAUSANTE = values[4];
                                 causantes.RUT_BENEFICIARIO = values[5];
                                 causantes.NOMBRE_BENEFICIARIO = values[6];
@@ -298,47 +297,28 @@ namespace RentaWEB2._0.Controllers
                         }
 
                     }
-
-                    /*
-                    byte[] file = null;
-                    Stream myStream = Files.OpenFile(fileName);
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        myStream.CopyTo(ms);
-                        file = ms.ToArray();
-                    }
-                    String Fechas = DateTime.Now.Date.ToString("dd/MM/yyyy");
-                    Documento doc = new Documento();
-                    int id = 1;
-                    doc.id_Documento = id;
-                    doc.Nombre = Files.FileName.Trim();
-                    doc.documento1 = files;
-                    doc.NombreReal = fileName;
-                    doc.Fecha = DateTime.Parse(Fechas);
-                    documentoDAO.Crear(doc);
-
-                    */
+                DocumentoDAO documentoDAO = new DocumentoDAO();
+                
                     String result = string.Empty;
                     String Fechas = DateTime.Now.Date.ToString("yyyy/MM/dd");
-                    using (BinaryReader b = new BinaryReader(Files.InputStream))
+
+                foreach (string strfile in Directory.GetFiles(Server.MapPath("~/Views/Causantes/descargas")))
+                {
+                    FileInfo fi = new FileInfo(strfile);
+                    if (fi.Name.Equals(fileName))
                     {
-                        byte[] bindata = b.ReadBytes(Files.ContentLength);
-                        result = System.Text.Encoding.UTF8.GetString(bindata);
+                        Documento documento = new Documento();
+                        documento.Archivo = fi.Name;
+                        documento.Tamaño = fi.Length;
+                        documento.tipo = GetFileTypeByExtension(fi.Extension);
+                        documento.Fecha = DateTime.Parse(Fechas);
+                        documentoDAO.Creardocumento(documento);
                     }
-
-                    FileInfo fi = new FileInfo(result);
-                    Documento documento = new Documento();
-                    documento.Archivo = fi.Name;
-                    documento.Tamaño = fi.Length;
-                    documento.tipo = GetFileTypeByExtension(fi.Extension);
-                    documento.Fecha = DateTime.Parse(Fechas);
-                    documentoDAO.Crear(documento);
                     
+                    
+                }
 
-
-
-
-                    ViewBag.Message = "Archivo Subiendo";
+                ViewBag.Message = "Archivo Subiendo";
                     return Redirect("Proceso_de_guardado");
 
 
@@ -375,10 +355,9 @@ namespace RentaWEB2._0.Controllers
         public ActionResult Proceso_de_guardado(String Guardar)
         {
             int docs = 0;
-            int on = 0;
-            int cants = 0;
+       
             DocumentoDAO documentoDAO = new DocumentoDAO();
-            List<Documento> documentos = documentoDAO.GetCausantes();
+            List<Documento> documentos = documentoDAO.GetDocumentos();
             CausantesDAO causanteDAO = new CausantesDAO();
             List<Causante> causantesguardados = causanteDAO.GetCausantes();
             List<Causante> Repetidos = new List<Causante>();
@@ -411,6 +390,7 @@ namespace RentaWEB2._0.Controllers
 
                 foreach (var item in db.Causante)
                 {
+                   
                     count = 0;
                     Causante ca = new Causante();
                     ca.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
@@ -426,14 +406,16 @@ namespace RentaWEB2._0.Controllers
                 }
                 if (count == 0)
                 {
-                    guardados.Add(c);
-                    //db.SaveChanges();
+                    
+                    db.Causante.Add(c);
+                    db.SaveChanges();
 
                 }
 
 
             }
-
+            
+           
             foreach (var item in documentos)
             {
                 Documento documento = new Documento();
@@ -441,9 +423,14 @@ namespace RentaWEB2._0.Controllers
                 documento.Tamaño = item.Tamaño;
                 documento.tipo = item.tipo;
                 documento.Fecha = item.Fecha;
-                
+                String fechadoc = item.Fecha.Date.ToString();
+                fechadoc = fechadoc.Substring(0, 10);
+                String[] Fechacompletadoc = fechadoc.Split('/');
+                fechadoc = Fechacompletadoc[2] + "/" + Fechacompletadoc[1] + "/" + Fechacompletadoc[0];
+
                 foreach (var items in db.Documento)
                 {
+                    docs = 0;
                     Documento Documentos = new Documento();
                     Documentos.Id_documento = items.Id_documento;
                     Documentos.Archivo = items.Archivo;
@@ -452,6 +439,7 @@ namespace RentaWEB2._0.Controllers
                     Documentos.Fecha = items.Fecha;
                     if (Documentos.Archivo.Equals(documento.Archivo) && Documentos.tipo.Equals(documento.tipo))
                     {
+                        docs = docs + 1;
                         conexion.Close();
                         conexion.Open();
                         String Cadena = " update Documento set Fecha="+"'"+documento.Fecha+"'where Id_documento="+ Documentos.Id_documento + "";
@@ -459,19 +447,19 @@ namespace RentaWEB2._0.Controllers
                         int cant;
                         cant = command.ExecuteNonQuery();
                         conexion.Close();
+                        break;
                     }
-                    else
-                    {
-                        docs = docs + 1;
-                    }
-                    if (docs==db.Documento.Count())
-                    {
-                        on = 0;
-                        cants = 1;
-                    }
+                 
+                    
 
                 }
-                    
+                if (docs == 0)
+                {
+
+                    db.Documento.Add(documento);
+                    db.SaveChanges();
+
+                }
 
             }
             foreach (var item in Repetidos)
@@ -510,29 +498,13 @@ namespace RentaWEB2._0.Controllers
             }
 
 
-            if (on == 0)
-            {
-                /*en caso que la base de datos esta vacia, la Variable c estara en 0 
+            /*en caso que la base de datos esta vacia, la Variable c estara en 0 
                      *  y la lista de objectos funcionarios se guardara en la Base de datos por DEFAULT */
-                if (docs == 0 && cants==0)
-                {
-                    db.Causante.AddRange(causantesguardados);
 
-                }
-                else
-                {
-                    db.Causante.AddRange( guardados);
-                }
-                db.Documento.AddRange(documentos);
                 
-                db.SaveChanges();
-                return Redirect("../Funcionarios/Proceso");
-            }
-            else
-            {
                 
                 return Redirect("../Funcionarios/Proceso");
-            }
+            
             
 
 
@@ -817,17 +789,7 @@ namespace RentaWEB2._0.Controllers
 
         public ActionResult Historial()
         {
-            List<Archivos> Listarchivos = new List<Archivos>();
-            foreach (string strfile in Directory.GetFiles(Server.MapPath("~/Files")))
-            {
-                FileInfo fi = new FileInfo(strfile);
-                Archivos archivos = new Archivos();
-                archivos.Doc = fi.Name;
-                archivos.tamaño = fi.Length;
-                archivos.tipo =GetFileTypeByExtension(fi.Extension);
-                Listarchivos.Add(archivos);
-            }
-            return View();
+            return View(db.Documento.OrderByDescending( d => d.Fecha).ToList());
         }
 
         private string GetFileTypeByExtension(string fileExtension)
@@ -846,28 +808,16 @@ namespace RentaWEB2._0.Controllers
 
         public FileResult Download( String CsvName)
         {
-
-            string fullPath = Path.Combine(Server.MapPath("/Causantes/descargas/"), CsvName);
+            string fileName = Path.GetFileName(CsvName);
+            string fullPath = Path.Combine(Server.MapPath("~/Views/Causantes/descargas/"), fileName);
             byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
 
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, CsvName);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
 
 
         }
 
 
-
-        private List<String > GetFiles()
-        {
-            List<String> items = new List<string>();
-            var dir= new System.IO.DirectoryInfo(Server.MapPath("~/Views/Causantes/descargas"));
-            System.IO.FileInfo[] filenames = dir.GetFiles("*.*");
-            foreach (var file in filenames)
-            { 
-                items.Add(file.Name);
-            }
-            return items;
-        }
 
 
 

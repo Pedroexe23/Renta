@@ -12,6 +12,7 @@ namespace RentaWEB2._0.Models.Dao
         {
             archivos.Add(A);
         }
+
          public List<Archivos> GetArchivos()
         {
             return archivos;

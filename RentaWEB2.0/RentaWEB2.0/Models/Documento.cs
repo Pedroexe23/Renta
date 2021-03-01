@@ -19,7 +19,7 @@ namespace RentaWEB2._0.Models
 
         public long Tamaño { get; set; }
 
-        [StringLength(10)]
+        [StringLength(50)]
         public string tipo { get; set; }
 
         [Column(TypeName = "date")]

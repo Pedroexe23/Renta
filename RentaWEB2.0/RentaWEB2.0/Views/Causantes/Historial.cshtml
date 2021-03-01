@@ -1,26 +1,35 @@
-﻿@model List<string>
+﻿
 
-@using (Html.BeginForm()) { 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title></title>
-</head>
-<body>
-    <table>
+@using (Html.BeginForm())
+{
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+    </head>
+    <body>
 
-        <tr>
-            <th> FileName</th>
-            <th> Link</th>
-        </tr>
-        @for (var i = 0; i <= Model.Count - 1; i++)
-        {
-            <tr>
-                <td>@Model[i].ToString()</td>
-                <td>@Html.ActionLink("Download", "Download", new { CsvName = @Model[i].ToString() }) </td>
-
-            </tr >
-            }
-    </table>
-</body>
+        <table>
+            <thead>
+                <tr>
+                    <th> Archivo</th>
+                    <th> Tamaño</th>
+                    <th> Tipo</th>
+                    <th> Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var DOCS in Model)
+                {
+                <tr>
+                    <td>@DOCS.Archivo</td>
+                    <td>@DOCS.Tamaño</td>
+                    <td>@DOCS.tipo</td>
+                    <td>@DOCS.Fecha</td>
+                    <td>@Html.ActionLink("Download", "Download", new { CsvName = @DOCS.Archivo}) </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </body>
 </html>
 }

@@ -7,20 +7,33 @@ namespace RentaWEB2._0.Models.Dao
 {
     public class DocumentoDAO
     {
-        List<Documento> documentos = new List<Documento>();
+        private static List<Documento> Documentos = new List<Documento>();
 
-        public void Crear(Documento d)
+        public void Creardocumento( Documento documento)
         {
-            documentos.Add(d);
+            Documentos.Add(documento);
+
         }
-        public List<Documento> GetCausantes()
+
+        public List<Documento> GetDocumentos()
         {
-            return documentos;
+            return Documentos;
         }
-        public void EliminarLista(Documento d)
+
+        public void EliminarDoucmento()
         {
-            documentos.Remove(d);
-            
+            List<Documento> limpiar = GetDocumentos();
+            for (int i = 0; i >= limpiar.Count; i++)
+            {
+                Documento documentos = new Documento();
+                documentos.Archivo = limpiar[i].Archivo;
+                documentos.Tamaño = limpiar[i].Tamaño;
+                documentos.tipo = limpiar[i].tipo;
+                documentos.Fecha = limpiar[i].Fecha;
+
+                Documentos.Remove(documentos);
+
+            }
         }
 
 
