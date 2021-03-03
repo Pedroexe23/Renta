@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
@@ -21,7 +23,7 @@ namespace RentaWEB2._0.Controllers
     {
         private Municipalidad db = new Municipalidad();
         private SqlConnection conexion = new SqlConnection("data source=TECNO-PRACTI;initial catalog=Municipalidad;integrated security=True;");
-
+       
 
         // GET: Causantes
         public ActionResult Index()
@@ -164,29 +166,40 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Insertar(HttpPostedFileBase Files)
         {
-            
-            CausantesDAO causanteDAO = new CausantesDAO();
-            causanteDAO.EliminarCausantes();
+            /* se crea dos clase de Dao una para el Causante y otro para el Documento  esas clases son para almacenamiento temporal
+             * en caso que en la parte de proceso de guardado se Cancele se tiene que volver al proceso de insertar otra vez, ademas
+             * el documento y todo el almacenamiento que estaban en la Clase DAO se borrara automaticamente
+             * */
 
+            CausantesDAO causanteDAO = new CausantesDAO();
+            DocumentoDAO documentoDAO = new DocumentoDAO();
+            causanteDAO.EliminarCausantes();
+            documentoDAO.EliminarDocumento();
 
             List<Causante> causa = new List<Causante>();
-           
+            /* en caso de que no hay nada en el documento se enviara un mensaje de Archivo Vacio*/
             if (Files == null || Files.ContentLength == 0)
             {
-                return Content("file not selected");
+                return ViewBag.Message = "Archivo Vacio";
             }
             else
             {
-                //try
-                //{
+                try
+                {
+                    /* toma el nombre y el contenido del documento , lo envia y lo guarda en una carpeta llamada "descargas"  */
                     String fileName = Path.GetFileName(Files.FileName);
 
                     String folderpath = Path.Combine(Server.MapPath("~/Views/Causantes/descargas"), fileName);
 
 
                     Files.SaveAs(folderpath);
-
-                    StreamReader streamReader = new StreamReader(Files.InputStream);
+                    /* toma el contenido del la tabla lo dividi en tres listas las  Listas A y B son para contenido que no se guarda 
+                     * use una variable Llamada Count si el count estan en menor o igual a 4 el contenido
+                     * estara en la lista A y B en caso de si una de las filas esta vacia se agregan el Valor Null,
+                     * se guardan en las listas A y B si Count es igual a 5 los datos se guardara en la lista C 
+                     * que son para la Columnas del causante  ej: Num.Correlativo , Rut Causante, etc.
+                     */
+                    StreamReader streamReader = new StreamReader(Files.InputStream, System.Text.Encoding.UTF8);
                     List<string> ListaA = new List<string>();
                     List<string> ListaB = new List<string>();
                     List<string> ListaC = new List<string>();
@@ -236,10 +249,13 @@ namespace RentaWEB2._0.Controllers
                             }
                             else
                             {
-
+                                /* ya si Count esta mayor a  5  se guardara los datos de los causantes  que al inicio estaran en String al inicio 
+                                 * y algunos datos del causante se conviete en variables Int o Short ej: NUM_CORRELATIVO, CODIGO_TIPO_CAUSANTE
+                                 * CODIGO_TIPO_BENEFICIARIO, CODIGO_TIPO_BENEFICIO, TRAMO, MONTO_BENEFICIO, CODIGO_ESTADO_TUPLA y PROMEDIO_RENTA 
+                                 * ademas que la fechas son guardardas en la varible DATE y todo los datos de la clase Causante se guardan una Lista Temporal 
+                                 * Llamada CausanteDAO 
+                                 */
                                 Causante causantes = new Causante();
-
-                                
 
                                 short Num_Correlativo = Convert.ToInt16(values[0]);
                                 int Codigo_tipo_causante = Int32.Parse(values[3]);
@@ -266,10 +282,11 @@ namespace RentaWEB2._0.Controllers
 
 
 
+
                                 causantes.NUM_CORRELATIVO = Num_Correlativo;
                                 causantes.RUT_CAUSANTE = values[1];
-                                causantes.NOMBRE_CAUSANTE = values[2].Replace("Ñ", "N").Trim();
-                            causantes.CODIGO_TIPO_CAUSANTE = Codigo_tipo_causante;
+                                causantes.NOMBRE_CAUSANTE = values[2];
+                                causantes.CODIGO_TIPO_CAUSANTE = Codigo_tipo_causante;
                                 causantes.TIPO_CAUSANTE = values[4];
                                 causantes.RUT_BENEFICIARIO = values[5];
                                 causantes.NOMBRE_BENEFICIARIO = values[6];
@@ -297,42 +314,44 @@ namespace RentaWEB2._0.Controllers
                         }
 
                     }
-                DocumentoDAO documentoDAO = new DocumentoDAO();
-                
+
+                    /* Esto es casi igual que los causante solamente que es el archivo solo tomara el archivo que tenga igual su nombre que el subio
+                     * y se guardara el nombre, el tamaño, tipo de  documento, y su fecha todo en una lista temporal llamada DocumentoDAO la fecha sera el dia y mes y año 
+                     * que se subio  y se retorna al proceso de guardado */
                     String result = string.Empty;
                     String Fechas = DateTime.Now.Date.ToString("yyyy/MM/dd");
 
-                foreach (string strfile in Directory.GetFiles(Server.MapPath("~/Views/Causantes/descargas")))
-                {
-                    FileInfo fi = new FileInfo(strfile);
-                    if (fi.Name.Equals(fileName))
+                    foreach (string strfile in Directory.GetFiles(Server.MapPath("~/Views/Causantes/descargas")))
                     {
-                        Documento documento = new Documento();
-                        documento.Archivo = fi.Name;
-                        documento.Tamaño = fi.Length;
-                        documento.tipo = GetFileTypeByExtension(fi.Extension);
-                        documento.Fecha = DateTime.Parse(Fechas);
-                        documentoDAO.Creardocumento(documento);
-                    }
-                    
-                    
-                }
+                        FileInfo fi = new FileInfo(strfile);
+                        if (fi.Name.Equals(fileName))
+                        {
+                            Documento documento = new Documento();
+                            documento.Archivo = fi.Name;
+                            documento.Tamaño = fi.Length;
+                            documento.tipo = GetFileTypeByExtension(fi.Extension);
+                            documento.Fecha = DateTime.Parse(Fechas);
+                            documentoDAO.Creardocumento(documento);
+                        }
 
-                ViewBag.Message = "Archivo Subiendo";
+
+                    }
+
+                    ViewBag.Message = "Archivo Subiendo";
                     return Redirect("Proceso_de_guardado");
 
 
-                    /* }
-                   catch (Exception ex)
-                    {
-                        ViewBag.Message = "Archivo erroneo";
-                        ViewBag.Message = ex;
-                        return View();
-
-                    }*/
-
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = "Archivo erroneo";
+                    ViewBag.Message = ex;
+                    return View();
 
                 }
+
+
+            }
 
 
 
@@ -343,6 +362,7 @@ namespace RentaWEB2._0.Controllers
         [HttpGet]
         public ActionResult Proceso_de_guardado()
         {
+            /* en la  parte get se mostrara si los datos en la lista temporal de CausanteDAO en order por su numero Correlativo  */
             CausantesDAO causanteDAO = new CausantesDAO();
             List<Causante> causantesguardados = causanteDAO.GetCausantes();
 
@@ -354,6 +374,9 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Proceso_de_guardado(String Guardar)
         {
+           /* si aceptan con todos los datos comienza el proceso de guardado que se guardara los datos de la clase Causante  y  Documento 
+            * a la  base de datos ademas que crean 3 listas una en la clase Documento que se almacena en la lista tempora de DocumentoDAO y las dos en la clase Causante una para guardar los repetidos 
+            * y otro que esta guardado en la lista temporal de CausanteDAO */
             int docs = 0;
        
             DocumentoDAO documentoDAO = new DocumentoDAO();
@@ -361,7 +384,8 @@ namespace RentaWEB2._0.Controllers
             CausantesDAO causanteDAO = new CausantesDAO();
             List<Causante> causantesguardados = causanteDAO.GetCausantes();
             List<Causante> Repetidos = new List<Causante>();
-            List<Causante> guardados = new List<Causante>();
+
+            /* primero comienza en los datos guardados en la lista temporal de CausanteDAO se mostrara de uno por uno */
             foreach (var items in causantesguardados)
             {
                 int count = 0;
@@ -387,7 +411,7 @@ namespace RentaWEB2._0.Controllers
                 c.PROMEDIO_RENTA = items.PROMEDIO_RENTA;
 
 
-
+                /* aqui se  mostrara los datos que estan en la Base de Datos  solo se mostrara los datos de NUM_CORRELATIVO y Rut del Causante */
                 foreach (var item in db.Causante)
                 {
                    
@@ -395,6 +419,8 @@ namespace RentaWEB2._0.Controllers
                     Causante ca = new Causante();
                     ca.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
                     ca.RUT_CAUSANTE = item.RUT_CAUSANTE;
+                    /* en caso que si el numero NUM_CORRELATIVO de la lista es igual al NUM_CORRELATIVO de la base de datos y el RUT del CAUSANTE de la lista temporal
+                     * es igual RUT del CAUSANTE de la base datos entonces se guarda los datos de la lista temporal en otra lista llamada repetidos */
                     if (c.NUM_CORRELATIVO == ca.NUM_CORRELATIVO && c.RUT_CAUSANTE.Equals(ca.RUT_CAUSANTE))
                     {
                         Repetidos.Add(c);
@@ -404,6 +430,8 @@ namespace RentaWEB2._0.Controllers
 
 
                 }
+                /* si se ha mostrado todos los datos de la base dato y no ha parecido ninguna se guardara como un nuevo causante incluso si 
+                 * la base de datos esta vacia se los datos del causante se guardara por defecto */
                 if (count == 0)
                 {
                     
@@ -414,6 +442,9 @@ namespace RentaWEB2._0.Controllers
 
 
             }
+
+            /* este proceso se mostrara el la lista temporal de DocumetoDAO 
+             * */
             
            
             foreach (var item in documentos)
@@ -428,6 +459,8 @@ namespace RentaWEB2._0.Controllers
                 String[] Fechacompletadoc = fechadoc.Split('/');
                 fechadoc = Fechacompletadoc[2] + "/" + Fechacompletadoc[1] + "/" + Fechacompletadoc[0];
 
+                /* se  muestra los datos de el documeto o los documentos que esta en la base de datos */
+
                 foreach (var items in db.Documento)
                 {
                     docs = 0;
@@ -437,6 +470,8 @@ namespace RentaWEB2._0.Controllers
                     Documentos.Tamaño = items.Tamaño;
                     Documentos.tipo = items.tipo;
                     Documentos.Fecha = items.Fecha;
+                    /* si el nombre nombre del el archivo de la lista temporal es igual al nombre de la base de datos
+                     * y tipo de la lista temporal es igual al tipo de la base de datos entonces se actualiza la fecha de el documento de la base de datos    */
                     if (Documentos.Archivo.Equals(documento.Archivo) && Documentos.tipo.Equals(documento.tipo))
                     {
                         docs = docs + 1;
@@ -453,6 +488,8 @@ namespace RentaWEB2._0.Controllers
                     
 
                 }
+                /* si se ha mostrado todos los datos de la base datos y no ha parecido ninguna se guardara como un nuevo Documento incluso si 
+                 * la base de datos esta vacia se los datos del Documento se guardara por defecto */
                 if (docs == 0)
                 {
 
@@ -462,6 +499,9 @@ namespace RentaWEB2._0.Controllers
                 }
 
             }
+
+            /* en el caso de la lista repetido se van actualiza los datos repetidos que estan la base de datos */
+
             foreach (var item in Repetidos)
             {
                 Causante c = new Causante();
@@ -497,13 +537,11 @@ namespace RentaWEB2._0.Controllers
                 conexion.Close();
             }
 
+            /* se elimina el documentos que estan en la lista temporal */
+            documentoDAO.EliminarDocumento();
 
-            /*en caso que la base de datos esta vacia, la Variable c estara en 0 
-                     *  y la lista de objectos funcionarios se guardara en la Base de datos por DEFAULT */
-
-                
-                
-                return Redirect("../Funcionarios/Proceso");
+            /* Direcciona a  proceso  */
+            return Redirect("../Funcionarios/Proceso");
             
             
 
@@ -511,21 +549,11 @@ namespace RentaWEB2._0.Controllers
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
         public ActionResult Descargar()
         {
-
+            /* se va crear una lista de la clase Actividad que es una fusion de Causante y funcionario */
             List<Actividad> activos = new List<Actividad>();
+            /* se va mostrar los datos que estan los causantes en la base de datos */
             foreach (var items in db.Causante)
             {
                 Causante c = new Causante();
@@ -548,12 +576,15 @@ namespace RentaWEB2._0.Controllers
                 c.CODIGO_ESTADO_TUPLA = items.CODIGO_ESTADO_TUPLA;
                 c.GLOSA_ESTADO_TUPLA = items.GLOSA_ESTADO_TUPLA;
                 c.PROMEDIO_RENTA = items.PROMEDIO_RENTA;
+                /* se va mostrar los datos que estan los funcionario en la base de datos */
                 foreach (var item in db.Funcionario)
                 {
                     Funcionario F = new Funcionario();
                     F.Id_Funcionario = item.Id_Funcionario;
                     F.Rut = item.Rut;
                     F.Activo = item.Activo;
+                    /* si el NUM_CORRELATIVO del Causante es igual a la Id_Funcionario y el Rut del Causante es igual
+                     * al Rut del funcionario entonces se guardara los datos del causante y el activo del funcionario   */
                     if (c.NUM_CORRELATIVO == F.Id_Funcionario && c.RUT_CAUSANTE.Equals(F.Rut))
                     {
                         Actividad A = new Actividad();
@@ -584,14 +615,14 @@ namespace RentaWEB2._0.Controllers
 
 
 
-
+            /* se va mostrar la lista de Actividad  en orden por su NUM_CORRELATIVO   */
             return View(activos.OrderBy(a => a.NUM_CORRELATIVO).ToList());
 
 
 
         }
 
-
+         /* es es un proceso de descargar un documento que esta en la lista  */
         [HttpPost]
         public void Descargar(String id)
         {
@@ -617,9 +648,10 @@ namespace RentaWEB2._0.Controllers
 
         public ActionResult Actualizar()
         {
-
+            /* se va crear una lista de la clase Actividad que es una fusion de Causante y funcionario */
 
             List<Actividad> activos = new List<Actividad>();
+            /* se va mostrar los datos que estan los causantes en la base de datos */
             foreach (var items in db.Causante)
             {
                 Causante c = new Causante();
@@ -642,12 +674,15 @@ namespace RentaWEB2._0.Controllers
                 c.CODIGO_ESTADO_TUPLA = items.CODIGO_ESTADO_TUPLA;
                 c.GLOSA_ESTADO_TUPLA = items.GLOSA_ESTADO_TUPLA;
                 c.PROMEDIO_RENTA = items.PROMEDIO_RENTA;
+                /* se va mostrar los datos que estan los funcionario en la base de datos */
                 foreach (var item in db.Funcionario)
                 {
                     Funcionario F = new Funcionario();
                     F.Id_Funcionario = item.Id_Funcionario;
                     F.Rut = item.Rut;
                     F.Activo = item.Activo;
+                    /* si el NUM_CORRELATIVO del Causante es igual a la Id_Funcionario y el Rut del Causante es igual
+                    * al Rut del funcionario entonces se guardara los datos del causante y el activo del funcionario   */
                     if (c.NUM_CORRELATIVO == F.Id_Funcionario && c.RUT_CAUSANTE.Equals(F.Rut))
                     {
                         Actividad A = new Actividad();
@@ -678,7 +713,7 @@ namespace RentaWEB2._0.Controllers
 
 
 
-
+            /* se va mostrar la lista de Actividad  en orden por su NUM_CORRELATIVO   */
             return View(activos.OrderBy(a => a.NUM_CORRELATIVO).ToList());
 
 
@@ -690,6 +725,7 @@ namespace RentaWEB2._0.Controllers
         [HttpPost]
         public ActionResult Actualizar( string Actualizar,  Causante causante)
         {
+            /* es es un proceso de actualizar los datos que estan en los tramos con el promedio de renta  */
 
             List<Causante> causantes = new List<Causante>();
             int tramo = 0;
@@ -699,7 +735,7 @@ namespace RentaWEB2._0.Controllers
             int[] montos = new int[9];
 
 
-
+            /* se va  mostrar los datos del causante  */
             foreach (var item in db.Causante)
             {
                 causante.NUM_CORRELATIVO = item.NUM_CORRELATIVO;
@@ -723,7 +759,7 @@ namespace RentaWEB2._0.Controllers
                 causante.RUT_CAUSANTE = item.RUT_CAUSANTE;
                 tramo = item.TRAMO;
                 monto = item.MONTO_BENEFICIO;
-
+                /* si la renta es mayor o igual 342246 entonces el tramo va a  ser 1 y el monto va a ser 13401   */
                 if (Renta <= 342246)
                 {
                     foreach (var list in db.Asignacion_Familiar)
@@ -737,6 +773,7 @@ namespace RentaWEB2._0.Controllers
                     }
 
                 }
+                /* sino si la renta es mayor a 342246 y meno o igual a 500033 entonces el tramo va a  ser 2 y el monto va a ser 8224   */
                 else if (Renta > 342246 && Renta <= 500033)
                 {
                     foreach (var list in db.Asignacion_Familiar)
@@ -749,6 +786,7 @@ namespace RentaWEB2._0.Controllers
                     }
 
                 }
+                /* sino si la renta es mayor a 500033 y meno o igual a 779882  entonces el tramo va a  ser 3 y el monto va a ser 2599   */
                 else if (Renta > 500033 && Renta <= 779882)
                 {
                     foreach (var list in db.Asignacion_Familiar)
@@ -760,6 +798,7 @@ namespace RentaWEB2._0.Controllers
                         }
                     }
                 }
+                /* sino  entonces el tramo va a  ser 4 y el monto va a ser 0   */
                 else
                 {
                     foreach (var list in db.Asignacion_Familiar)
@@ -773,7 +812,7 @@ namespace RentaWEB2._0.Controllers
 
                 }
 
-
+                /* se va editar el monto y el tramo cuando el numero correlativo es igual al numero correlativo del Causante  */
                 conexion.Close();
                 conexion.Open();
                 String Cadena = "update Causante set MONTO_BENEFICIO = " + monto + ", TRAMO=" + tramo + " where NUM_CORRELATIVO =" + causante.NUM_CORRELATIVO + "";
@@ -784,11 +823,13 @@ namespace RentaWEB2._0.Controllers
                 cant = command.ExecuteNonQuery();
                 conexion.Close();
             }
+            /* Redirecciona al index */
             return Redirect("Index");
         }
 
         public ActionResult Historial()
         {
+            /* se va mostrar una lista con los datos de los documentos en orden que es el ultimo que se subio  */
             return View(db.Documento.OrderByDescending( d => d.Fecha).ToList());
         }
 
@@ -805,7 +846,8 @@ namespace RentaWEB2._0.Controllers
                     return "Unknown";
             }
         }
-
+        /* cuando el presione el boton de descargar que esta el historial
+         * y va descargar segun su nombre con el contenido del archivo  */
         public FileResult Download( String CsvName)
         {
             string fileName = Path.GetFileName(CsvName);

@@ -189,10 +189,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Actividad.cs" />
-    <Compile Include="Models\Archivos.cs" />
     <Compile Include="Models\Asignacion_Familiar.cs" />
     <Compile Include="Models\Causante.cs" />
-    <Compile Include="Models\Dao\ArchivoDAO.cs" />
     <Compile Include="Models\Dao\CausantesDAO.cs" />
     <Compile Include="Models\Dao\DocumentoDAO.cs" />
     <Compile Include="Models\Documento.cs" />
@@ -307,6 +305,9 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

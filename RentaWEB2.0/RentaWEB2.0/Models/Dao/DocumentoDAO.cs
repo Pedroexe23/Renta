@@ -20,11 +20,17 @@ namespace RentaWEB2._0.Models.Dao
             return Documentos;
         }
 
-        public void EliminarDoucmento()
+        public void EliminarDocumento()
         {
             List<Documento> limpiar = GetDocumentos();
+
             for (int i = 0; i >= limpiar.Count; i++)
             {
+                if (limpiar.Count!=0)
+                {
+
+                
+
                 Documento documentos = new Documento();
                 documentos.Archivo = limpiar[i].Archivo;
                 documentos.Tamaño = limpiar[i].Tamaño;
@@ -32,7 +38,7 @@ namespace RentaWEB2._0.Models.Dao
                 documentos.Fecha = limpiar[i].Fecha;
 
                 Documentos.Remove(documentos);
-
+                }
             }
         }
 
