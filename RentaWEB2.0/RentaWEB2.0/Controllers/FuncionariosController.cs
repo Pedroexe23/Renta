@@ -202,6 +202,8 @@ namespace RentaWEB2._0.Controllers
                     nombres = nombre1 + " " + nombre2;
 
                 }
+                /* los datos de los causantes como Rut Nombre promedio_Renta estaran
+                 * en los funcionarios como Rut, nombre, apelldios y Renta_promedio y los deams datos en 0 o nulos */
                 Funcionario funcionario = new Funcionario();
                 funcionario.Id_Funcionario = id_Funcionario;
                 funcionario.Rut = Rut;
@@ -233,20 +235,24 @@ namespace RentaWEB2._0.Controllers
                 funcionario.EstadoCivil = ilem.EstadoCivil;
                 funcionario.Fec_nacimiento = ilem.Fec_nacimiento;
                 funcionario.Direccion = ilem.Direccion;
-
+                /* se va a leer los datos del objecto Funcionario solamente su id y su rut */
                 foreach (var items in db.Funcionario)
                 {
-                    
+                      
                     Funcionario funcionario1 = new Funcionario();
                     funcionario1.Id_Funcionario = items.Id_Funcionario;
                     funcionario1.Rut = items.Rut;
-
+                    /*si la id del funcionario de la lista es igual a la id del funcionario de la base de datos y
+                     * el rut del funcionario de la lista es igual al rut del funcionario enttonces los datos de la lista
+                     * se guardara a otra lista llamada repetidos con los mismo parametros del objectos Funcionario    */
                     if (funcionario1.Id_Funcionario == ilem.Id_Funcionario && funcionario1.Rut.Equals(ilem.Rut))
                     {
                         b = 0;
                         c = c + 1;
                         repetidos.Add(funcionario);
                     }
+                    /*si no se guardara en otra lista con el nombre de los norepetidos con los datos del objeto funcionario de la base de datos 
+                     * y la variable b y c se va a acumular    */
                     else
                     {
                         on= 0;
@@ -254,18 +260,20 @@ namespace RentaWEB2._0.Controllers
                         b = b + 1;
                         norepetidos.Add(funcionario1);
                     }
+                    /*si la variable b es igual al conteo del foreach de la base de datos del funcionario entonces este dato es un nuevo funcionario 
+                     * y se guarda en la  lista de nuevo */
                     if (b==db.Funcionario.Count())
                     {
                         
                         nuevo.Add(funcionario);
                     }
 
-                    /* se va a mostrar los datos almacenados en la lista de objecto Funcionario almacenados  */
-
+                    
 
                 }
             }
-
+            /*Se crea  un foreach y se va a leer  los datos de la lista del norepetido y  va modificar del activo va a ser 0
+             * como si fuera una nueva hoja de activos mayormente a todos los funcionarios van a ser 0 al inicio  */
             foreach (var item in norepetidos)
             {
                 Funcionario funcionario = new Funcionario();
@@ -278,6 +286,8 @@ namespace RentaWEB2._0.Controllers
                 cant = command.ExecuteNonQuery();
                 conexion.Close();
             }
+            /* se crea  un foreach para leer los datos de la  lista de los repetidos  va a cambiar su activo a  1 en la base de datos 
+             * entonces solo va a pasar a los funcionarios que estan repetidos  */
             foreach (var item in repetidos)
             {
                 Funcionario funcionario = new Funcionario();
@@ -290,13 +300,14 @@ namespace RentaWEB2._0.Controllers
                 cant = command.ExecuteNonQuery();
                 conexion.Close();
             }
+            /* se crea un foreach para leer a los nuevos  y la variable on va a ser  igual a 1  */
             foreach (var item in nuevo)
             {
                 on = 1;
             }
 
 
-
+            /*si la varible on es igual a 1  entonces  inicia la siguiente secuencia*/
             if (on==1)
             {
                 /*en caso que la base de datos esta vacia, la Variable c estara en 0 
@@ -306,14 +317,18 @@ namespace RentaWEB2._0.Controllers
                 db.Funcionario.AddRange(funcionarios);
 
                 }
+                /* sino entonces los datos de  la lista nuevo se añade a la base de datos  */
                 else
                 {
                 db.Funcionario.AddRange(nuevo);
                 }
+                /*se elimina  los datos del archivo temporal con su lista  y  se guarda  los datos de la base de datos ademas
+                 * se redireciona al proceso de descargar */
                 causanteDAO.EliminarCausantes();
                 db.SaveChanges();
                 return Redirect("../Causantes/Descargar");
             }
+            /*si on esta en 0  entonces se elimina  los datos del archivo temporal con su lista y se redireciona al proceso de descargar */
             else
             {
                 causanteDAO.EliminarCausantes();

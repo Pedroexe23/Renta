@@ -145,10 +145,12 @@ namespace RentaWEB2._0.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Inicio(FormCollection formCollection)
         {
-
+            /* se extrae los datos del el nombre de usuario y contraseña */
             Usuario usuario = new Usuario();
             String User = formCollection["nombre-txt"];
             String Contrasena = formCollection["contrasena-txt"];
+            /* Si el nombre de la variable de la clase es igual a la variable User 
+             * y la variable Constrasena es igual a Password entonces se retorna a la vista y controlador get del index   */
             if (User.Equals(usuario.Username) && Contrasena.Equals(usuario.Password))
             {
                 return RedirectToAction("Index");
@@ -156,6 +158,7 @@ namespace RentaWEB2._0.Controllers
             return View();
 
         }
+        /*solo se va  mostrar la vista de insertar */
         [HttpGet]
         public ActionResult Insertar()
         {
@@ -269,6 +272,8 @@ namespace RentaWEB2._0.Controllers
                                 int Monto_Beneficio = Int32.Parse(values[15]);
                                 int Codigo_estado_Tupla = Int32.Parse(values[16]);
                                 int Promedio_Renta;
+                                /* se enviara un try en caso que el promedio renta sea Null se cambiara un 0
+                                 * si no es el caso entonces se enviara el numero que esta en el archivo  */
                                 try
                                 {
                                     Promedio_Renta = Int32.Parse(values[18]);
@@ -315,10 +320,10 @@ namespace RentaWEB2._0.Controllers
 
                     }
 
-                    /* Esto es casi igual que los causante solamente que es el archivo solo tomara el archivo que tenga igual su nombre que el subio
-                     * y se guardara el nombre, el tamaño, tipo de  documento, y su fecha todo en una lista temporal llamada DocumentoDAO la fecha sera el dia y mes y año 
-                     * que se subio  y se retorna al proceso de guardado */
-                    String result = string.Empty;
+                    /* si el nombre del documento es igual a nombre del documento que hemos subido entonces se vas a extraer 
+                    *el nombre, el tamaño, la extension y la fecha del el dia que se subio yse guardara en el archivo temporal de documentoDAO
+                     *para mas informacion de la extension dirijase al metodo GetFileTypeByExtension */
+                   String result = string.Empty;
                     String Fechas = DateTime.Now.Date.ToString("yyyy/MM/dd");
 
                     foreach (string strfile in Directory.GetFiles(Server.MapPath("~/Views/Causantes/descargas")))
@@ -336,12 +341,15 @@ namespace RentaWEB2._0.Controllers
 
 
                     }
+                    /* despues sera enviado al controlador de Proceso_de_guardado  */
 
                     ViewBag.Message = "Archivo Subiendo";
                     return Redirect("Proceso_de_guardado");
 
 
                 }
+                /* en caso qyue el doucmento son sea  igual al formato entonces se enviara 
+                 * un mensaje de error diciedo Archivo Erroneo  */
                 catch (Exception ex)
                 {
                     ViewBag.Message = "Archivo erroneo";
@@ -537,7 +545,7 @@ namespace RentaWEB2._0.Controllers
                 conexion.Close();
             }
 
-            /* se elimina el documentos que estan en la lista temporal */
+            /* se elimina el documentos que estan en la lista del archivo temporal */
             documentoDAO.EliminarDocumento();
 
             /* Direcciona a  proceso  */
@@ -622,7 +630,9 @@ namespace RentaWEB2._0.Controllers
 
         }
 
-         /* es es un proceso de descargar un documento que esta en la lista  */
+         /*cuando presione el boton de descargar en la vista de Descarga lo que va
+          * a hacer es una visualizacion de los datos de la tabla forma ordenada
+          * y los datos estaran entregado en un archivo excel y sera guardado en la carpeta Descargas */
         [HttpPost]
         public void Descargar(String id)
         {
@@ -812,7 +822,8 @@ namespace RentaWEB2._0.Controllers
 
                 }
 
-                /* se va editar el monto y el tramo cuando el numero correlativo es igual al numero correlativo del Causante  */
+                /* se va a crear una conexion y que va a editar el monto y el tramo cuando 
+                 * el numero correlativo es igual al numero correlativo del Causante  */
                 conexion.Close();
                 conexion.Open();
                 String Cadena = "update Causante set MONTO_BENEFICIO = " + monto + ", TRAMO=" + tramo + " where NUM_CORRELATIVO =" + causante.NUM_CORRELATIVO + "";
@@ -832,7 +843,8 @@ namespace RentaWEB2._0.Controllers
             /* se va mostrar una lista con los datos de los documentos en orden que es el ultimo que se subio  */
             return View(db.Documento.OrderByDescending( d => d.Fecha).ToList());
         }
-
+        /*el proceso GetFileTypeByExtension es un subproceso de para saber que tipo de 
+         * documento tomara los caracteres del documento y sera indetificado por un switch qu al final va a retonar a un nombre al documento  */
         private string GetFileTypeByExtension(string fileExtension)
         {
             switch (fileExtension.ToLower())
@@ -847,7 +859,7 @@ namespace RentaWEB2._0.Controllers
             }
         }
         /* cuando el presione el boton de descargar que esta el historial
-         * y va descargar segun su nombre con el contenido del archivo  */
+         * va a ser un subproceso que va descargar segun su nombre del archivo y su contenido del archivo  */
         public FileResult Download( String CsvName)
         {
             string fileName = Path.GetFileName(CsvName);
