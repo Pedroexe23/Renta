@@ -17,12 +17,14 @@
 <body>
     @using (Html.BeginForm())
     {
-
+      
         @Html.AntiForgeryToken()
         <a href="/Causantes/Index"><input type="button" value="Inicio" class="btn btn-info " /></a>
         <div class="row">
             <div class="col-lg col-md col-sm">
-                <table class="table" border="1" cellpadding="1" cellspacing="1" >
+                <!-- se crea una tabla con los en el encabezado de la tabla estara NUM.CORRELATIVO,
+                    RUT CAUSANTE, CODIGO TIPO CAUSANTE, etc. -->
+                <table class="table" border="1" cellpadding="1" cellspacing="1">
                     <thead>
                         <tr>
                             <th>NUM.CORRELATIVO</th>
@@ -49,13 +51,15 @@
 
                     </thead>
                     <tbody>
-
+                        <!-- en la parte del cuerpo se mostrara los datos del causante en la  lista  
+                            con le nombre de activos para recordar que es una fusion de Causantes y Funcionarios   -->
                         @foreach (var CElementos in Model)
                         {
-                            if (CElementos.ACTIVO== 1)
+                            /* si el activo de la lista es igual a 1 entonces se mostara la columna de color verde con todos los datos que se muestra */
+                            if (CElementos.ACTIVO == 1)
                             {
                                 <tr>
-                                    <td width="50%" class="bg-success text-white" >@CElementos.NUM_CORRELATIVO</td>
+                                    <td width="50%" class="bg-success text-white">@CElementos.NUM_CORRELATIVO</td>
                                     <td>@CElementos.RUT_CAUSANTE</td>
                                     <td>@CElementos.NOMBRE_CAUSANTE</td>
                                     <td>@CElementos.CODIGO_TIPO_CAUSANTE</td>
@@ -79,6 +83,7 @@
                             }
                             else
                             {
+                                /* sino  entonces se mostara la columna de color rojo con todos los datos que se muestra */
                                 <tr>
                                     <td width="50%" class="bg-danger text-white">@CElementos.NUM_CORRELATIVO</td>
                                     <td>@CElementos.RUT_CAUSANTE</td>
@@ -112,6 +117,7 @@
                 </table>
             </div>
         </div>
+        <!-- al preionar se va crear un proceso de descarga con los datos que estan en la tabla en un documento excel -->
         <div class="row">
             <input type="submit" name="id" value="Descargar" class="btn btn-success" />
 

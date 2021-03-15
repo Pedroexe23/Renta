@@ -16,14 +16,16 @@
 <body>
     @using (Html.BeginForm("Insertar", "Causantes", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
+        <!-- se crea una seccion tipo carta  -->
         <a href="/Causantes/Index"><input type="button" value="Volver" class="btn btn-info " /></a>
         <div class="card">
             <div class="card-body">
+                <!-- este es un boton para subir los achivos ecxel -->
                 @Html.TextBox("Files", "", new { type = "file" }) <br />
 
 
 
-
+                <!-- si el archivo no se ha subido o el formato esta incorrecto se enviara un mensaje  -->
                 @{
                     if (ViewBag.Message != null)
                     {
@@ -32,7 +34,7 @@
 
                 }
             </div>
-
+            <!-- este es un boton para iniciar el proceso subir el archivo y comenzar el proceso post -->
             <input type="submit" value="subir" class="btn btn-success" />
         </div>
 
